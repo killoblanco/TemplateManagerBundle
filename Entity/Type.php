@@ -34,6 +34,7 @@ class Type
      * @ORM\Column(name="active", type="boolean")
      */
     private $active = true;
+
     /**
      * @var DateTime
      *
@@ -49,7 +50,6 @@ class Type
 
     /**
      * Type constructor.
-     * @param DateTime $created
      */
     public function __construct()
     {

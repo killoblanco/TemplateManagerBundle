@@ -1,0 +1,14 @@
+{% extends "@TemplateManager/utils/common/base.html.twig" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="row">
+                    {{ include(template_from_string(template.content)) }}
+                </div>
+            </div>
+            <div class="col-sm-4">:D</div>
+        </div>
+    </div>
+{% endblock %}

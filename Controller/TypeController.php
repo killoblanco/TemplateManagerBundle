@@ -19,28 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 class TypeController extends Controller
 {
     /**
-     * @Route("/")
-     */
-    public function indexAction()
-    {
-        return $this->render('@TemplateManager/pages/index.html.twig');
-    }
-
-    /**
-     * @Route("/components", name="tm_components")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function componentsAction()
-    {
-        $parameters = [
-            'uno' => [
-                'value' => 'hola mundo',
-            ],
-        ];
-        return $this->render('@TemplateManager/pages/components.html.twig', $parameters);
-    }
-
-    /**
      * @Route("/type", name="tm_type")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -75,6 +53,7 @@ class TypeController extends Controller
         $types = $em->getRepository('TemplateManagerBundle:Type')
             ->findAll();
         $parameters = [
+            'page_title' => 'Types',
             'types' => json_encode($this->get('serializer')->normalize($types, 'json')),
             'types_form' => $type_form->createView(),
         ];

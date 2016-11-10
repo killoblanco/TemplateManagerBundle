@@ -1,9 +1,14 @@
 services:
+  template_manager.twig.extension.string:
+    class: Twig_Extension_StringLoader
+    public: true
+    tags:
+        - { name: 'twig.extension' }
   template_manager:
-        class: killoblanco\TemplateManagerBundle\Twig\Extension\TemplateManagerExtension
-        public: true
-        tags:
-          - { name: twig.extension }
+    class: killoblanco\TemplateManagerBundle\Twig\Extension\TemplateManagerExtension
+    public: true
+    tags:
+      - { name: twig.extension }
 #    template_manager.example:
 #        class: killoblanco\TemplateManagerBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]

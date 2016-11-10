@@ -11,6 +11,20 @@
     {% endblock %}
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h1>
+                    <a href="{{ path('tm_index') }}"><i class="fa fa-home"></i></a> Template Manager
+                    {% if page_title is defined %}
+                        :&nbsp;{{ page_title }}
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
 {% block content %}{% endblock %}
 {% block js %}
     {% include "@TemplateManager/utils/common/js.html.twig" %}
