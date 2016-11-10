@@ -17,7 +17,7 @@ Once the AppKernel file is edited we need to get able the bundle's routes, so ad
 ```YML
 ...
 template_manager:
-    resource: "@killoblanco/TemplateManagerBundle/controller/"
+    resource: "@TemplateManagerBundle/controller/"
     type:     annotation
     prefix: /
 ...
@@ -32,6 +32,11 @@ uncommet the line in your own config file.
 framework:
     # ...
     serializer: { enable_annotations: true }
+```
+
+Finally you only need to update your database by running the Symfony database update command
+```SHELL
+php app/console doctrine:schema:update --force
 ```
 
 ## Usage
