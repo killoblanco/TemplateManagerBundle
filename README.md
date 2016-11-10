@@ -12,6 +12,17 @@ new killoblanco\TemplateManagerBundle\TemplateManagerBundle(),
 ...    
 ```
 
+Once the AppKernel file is edited we need to get able the bundle's routes, so adding this on your routing.yml file you can do it.
+
+```YML
+...
+template_manager:
+    resource: "@killoblanco/TemplateManagerBundle/controller/"
+    type:     annotation
+    prefix: /
+...
+```
+
 An important thing is that we use the symfony's serializer component. If you have it
 already enabled in your config file you can pass by. Otherwise to enable it you can
 uncommet the line in your own config file.
