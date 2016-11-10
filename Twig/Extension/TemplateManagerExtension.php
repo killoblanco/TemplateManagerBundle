@@ -2,6 +2,7 @@
 
 namespace killoblanco\TemplateManagerBundle\Twig\Extension;
 
+use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_SimpleFunction;
 
@@ -12,9 +13,9 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         return [
             new Twig_SimpleFunction('bindControl', [$this, 'bindControlFunction'], ['is_safe' => ['html']]),
+            new Twig_SimpleFunction('discoverControls', [$this, 'discoverControlsFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('bindTarget', [$this, 'bindTargetFunction'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('templateManagerConfig', [$this, 'templateManagerConfigFunction'], ['is_safe' => ['html']]),
-            new Twig_Extension_StringLoader(),
         ];
     }
 
@@ -23,10 +24,12 @@ class TemplateManagerExtension extends \Twig_Extension
         $control = $this->openControlTag($controlType);
 
         if ($attrs) {
-            $control .= $this->expandAttrs($attrs);
+//            $control .= $this->expandAttrs($attrs);
         }
 
         $control .= ' v-model="' . $controlValue . '"';
+        $control .= ' class="form-control" ';
+
         $control .= $this->closeControlTag($controlType);
 
         return $this->getBootstrap($control, $controlValue);
@@ -76,6 +79,28 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         $app = "<script>new Vue({el: '#" . $app . "',data: {text: 'Sample Text',link: 'http://www.optimeconsulting.com/',img: 'https://placekitten.com/700/200',number: 1998,date: '2016-11-08',datetime: '2016-11-08T00:00',time: '14:18',email: 'kvasquez@optimeconsulting.com',tel: '+572572238',url: 'http://www.optimeconsulting.com/',textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',},})</script>";
         return $app;
+    }
+
+    public function discoverControlsFunction(Twig_Environment $twig, $template)
+    {
+
+        preg_match_all("/\{{2}[\s\w]+(?:Target).+\}{2}/", $template, $matches);
+        $controls = [];
+        foreach ($matches[0] as $match) {
+            array_push(
+                $controls,
+//                preg_replace( ["/(?:Target)/", "/\).+\}{2}/"], ["Control", ", true ) }}"], $match )
+                preg_replace( "/(?:Target)/", "Control", $match )
+            );
+        }
+
+        $response = '<div class="page-heaer"><h4>Template Controllers</h4></div>';
+        $response .= implode('',$controls);
+
+        $response = $twig->createTemplate($response);
+
+        return $response->render([]);
+
     }
 
 
@@ -141,7 +166,7 @@ class TemplateManagerExtension extends \Twig_Extension
 
     private function expandAttrs($attrs)
     {
-        if ($attrs) {
+        if (is_array($attrs)) {
             $r = '';
             foreach ($attrs as $key => $value) {
                 $r .= ' ' . $key . '="' . $value . '"';

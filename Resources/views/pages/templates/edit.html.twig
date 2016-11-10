@@ -8,7 +8,9 @@
                     {{ include(template_from_string(template.content)) }}
                 </div>
             </div>
-            <div class="col-sm-4">:D</div>
+            <div class="col-sm-4">
+                {{ discoverControls(template.content) }}
+            </div>
         </div>
     </div>
 {% endblock %}

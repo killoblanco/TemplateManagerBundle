@@ -42,8 +42,6 @@ class TemplateController extends Controller
     {
         $em = $this->getDoctrine();
 
-        $twig =
-
         $template = $em->getRepository('TemplateManagerBundle:Template')
             ->find($id);
 
