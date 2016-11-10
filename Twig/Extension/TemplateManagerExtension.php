@@ -14,6 +14,7 @@ class TemplateManagerExtension extends \Twig_Extension
         return [
             new Twig_SimpleFunction('bindControl', [$this, 'bindControlFunction'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('discoverControls', [$this, 'discoverControlsFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new Twig_SimpleFunction('generateScriptHandlers', [$this, 'generateScriptHandlersFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('bindTarget', [$this, 'bindTargetFunction'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('templateManagerConfig', [$this, 'templateManagerConfigFunction'], ['is_safe' => ['html']]),
         ];
@@ -24,7 +25,7 @@ class TemplateManagerExtension extends \Twig_Extension
         $control = $this->openControlTag($controlType);
 
         if ($attrs) {
-//            $control .= $this->expandAttrs($attrs);
+            $control .= $this->expandAttrs($attrs);
         }
 
         $control .= ' v-model="' . $controlValue . '"';
@@ -84,22 +85,43 @@ class TemplateManagerExtension extends \Twig_Extension
     public function discoverControlsFunction(Twig_Environment $twig, $template)
     {
 
-        preg_match_all("/\{{2}[\s\w]+(?:Target).+\}{2}/", $template, $matches);
-        $controls = [];
-        foreach ($matches[0] as $match) {
-            array_push(
-                $controls,
-//                preg_replace( ["/(?:Target)/", "/\).+\}{2}/"], ["Control", ", true ) }}"], $match )
-                preg_replace( "/(?:Target)/", "Control", $match )
-            );
-        }
+        $controls = $this->convertToControls($template);
 
         $response = '<div class="page-heaer"><h4>Template Controllers</h4></div>';
-        $response .= implode('',$controls);
+        $response .= implode('', $controls);
 
         $response = $twig->createTemplate($response);
 
         return $response->render([]);
+
+    }
+
+    public function generateScriptHandlersFunction(Twig_Environment $twig, $app_name, $template){
+        $response = "<script>new Vue({el: '".$app_name."' ,data: {";
+
+        $handlers = $this->convertToControls($template);
+
+        foreach ($handlers as $handler) {
+            preg_match("/\'[\w]+\'\,([\S\']+|[\'])\'/", $handler, $match);
+            $_tmp = str_split($match[0],);
+            $type = $_tmp[1]
+
+        }
+
+
+//        $response = [];
+//        foreach ($matches[0] as $match) {
+//            array_push(
+//                $response,
+//                preg_replace(["/(?:Target)/", "/\,\s\{.+\}{2}/"], ["Control", ") }}"], $match)
+//            );
+//        }
+
+
+        dump($handlers);die;
+
+        $response .= "}, }) </script>";
+        return $response;
 
     }
 
@@ -116,7 +138,7 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         switch ($type) {
             case 'textarea':
-                return '<textarea';
+                return '<textarea rows= 5 style="max-width:100%;"';
             case 'tel':
                 return '<input type="tel"';
             case 'email':
@@ -175,5 +197,37 @@ class TemplateManagerExtension extends \Twig_Extension
         } else {
             return '';
         }
+    }
+
+    private function convertToControls($targets)
+    {
+        preg_match_all("/\{{2}[\s\w]+(?:Target).+\}{2}/", $targets, $matches);
+        $response = [];
+        foreach ($matches[0] as $match) {
+            array_push(
+                $response,
+                preg_replace(["/(?:Target)/", "/\,\s\{.+\}{2}/"], ["Control", ") }}"], $match)
+            );
+        }
+        return $response;
+    }
+
+    private function getDefaultValue($type)
+    {
+        $defaults = [
+            'text' => 'Sample Text',
+            'link' => 'http://www.optimeconsulting.com/',
+            'img' => 'https://placekitten.com/700/200',
+            'number' => 1998,
+            'date' => '2016-11-08',
+            'datetime' => '2016-11-08T00:00',
+            'time' => '14:18',
+            'email' => 'kvasquez@optimeconsulting.com',
+            'tel' => '+572572238',
+            'url' => 'http://www.optimeconsulting.com/',
+            'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
+        ];
+
+        return $defaults[$type];
     }
 }
