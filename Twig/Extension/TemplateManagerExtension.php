@@ -2,6 +2,7 @@
 
 namespace killoblanco\TemplateManagerBundle\Twig\Extension;
 
+use Twig_Extension_StringLoader;
 use Twig_SimpleFunction;
 
 class TemplateManagerExtension extends \Twig_Extension
@@ -13,6 +14,7 @@ class TemplateManagerExtension extends \Twig_Extension
             new Twig_SimpleFunction('bindControl', [$this, 'bindControlFunction'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('bindTarget', [$this, 'bindTargetFunction'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('templateManagerConfig', [$this, 'templateManagerConfigFunction'], ['is_safe' => ['html']]),
+            new Twig_Extension_StringLoader(),
         ];
     }
 
