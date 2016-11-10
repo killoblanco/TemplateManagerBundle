@@ -27,7 +27,7 @@ class TypeController extends Controller
     }
 
     /**
-     * @Route("/components", name="components")
+     * @Route("/components", name="tm_components")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function componentsAction()
