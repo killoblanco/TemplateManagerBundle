@@ -165,7 +165,7 @@ class TemplateManagerExtension extends \Twig_Extension
         $bootstrap = '<div class="form-group">';
 
         if ($name) {
-            $bootstrap .= '<label for="' . $name . '">' . $name . ':</label>';
+            $bootstrap .= '<label for="' . $name . '">' . ucfirst($name) . ':</label>';
         }
 
         $bootstrap .= $controller . '</div>';
