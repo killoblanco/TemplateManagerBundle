@@ -2,9 +2,11 @@
 
 namespace killoblanco\TemplateManagerBundle\Controller;
 
+use killoblanco\TemplateManagerBundle\Entity\TemplateDefaults;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TemplateController
@@ -51,5 +53,42 @@ class TemplateController extends Controller
         ];
 
         return $this->render('@TemplateManager/pages/templates/edit.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("/save/{id}", name="tm_templates_save")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveAction(Request $request, $id = null)
+    {
+        $em = $this->getDoctrine();
+
+        $template = $em->getRepository('TemplateManagerBundle:Template')
+            ->find($id);
+
+        $template->setHtml($request->get('html'));
+
+        $controls = $request->request->all();
+        unset($controls['html']);
+        $controls = json_encode($controls);
+
+        $defaults = $em->getRepository(TemplateDefaults::class)
+            ->findOneBy(['template' => $template]);
+
+        if ($defaults) {
+            $defaults->setData($controls);
+        } else {
+            $defaults = new TemplateDefaults();
+            $defaults->setTemplate($template);
+            $defaults->setData($controls);
+        }
+
+        $em->getManager()->persist($template);
+        $em->getManager()->persist($defaults);
+        $em->getManager()->flush();
+
+        return $this->redirectToRoute('tm_templates_list');
     }
 }

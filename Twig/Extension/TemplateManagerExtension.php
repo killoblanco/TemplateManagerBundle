@@ -2,12 +2,24 @@
 
 namespace killoblanco\TemplateManagerBundle\Twig\Extension;
 
+use killoblanco\TemplateManagerBundle\Entity\TemplateDefaults;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_SimpleFunction;
 
 class TemplateManagerExtension extends \Twig_Extension
 {
+    protected $doctrine;
+
+    /**
+     * TemplateManagerExtension constructor.
+     * @param $doctrine
+     */
+    public function __construct(RegistryInterface $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
 
     public function getFunctions()
     {
@@ -23,6 +35,8 @@ class TemplateManagerExtension extends \Twig_Extension
     public function bindControlFunction($controlType, $controlValue, $attrs = null)
     {
         $control = $this->openControlTag($controlType);
+
+        $control .= ' name="'.$controlValue.'" ';
 
         if ($attrs) {
             $control .= $this->expandAttrs($attrs);
@@ -84,8 +98,12 @@ class TemplateManagerExtension extends \Twig_Extension
 
     public function discoverControlsFunction(Twig_Environment $twig, $template)
     {
+        $em = $this->doctrine;
 
-        $controls = $this->convertToControls($template);
+        $template = $em->getRepository('TemplateManagerBundle:Template')
+            ->find($template);
+
+        $controls = $this->convertToControls($template->getBase());
 
         $response = '<div class="page-heaer"><h4>Template Controllers</h4></div>';
         $response .= implode('', $controls);
@@ -96,17 +114,18 @@ class TemplateManagerExtension extends \Twig_Extension
 
     }
 
-    public function generateScriptHandlersFunction(Twig_Environment $twig, $app_name, $template){
-        $response = "<script>new Vue({el: '".$app_name."' ,data: {";
+    public function generateScriptHandlersFunction(Twig_Environment $twig, $app_name, $template)
+    {
+        $em = $this->doctrine;
 
-        $handlers = $this->convertToControls($template);
+        $response = "<script>new Vue({el: '".$app_name."' ,data: ";
 
-        foreach ($handlers as $handler) {
-            preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $handler, $matches);
-            $response .= $matches['name'].": '".$this->getDefaultValue($matches['type'])."', ";
-        }
+        $template = $em->getRepository('TemplateManagerBundle:Template')
+            ->find($template);
 
-        $response .= "}, }) </script>";
+        $response .= $this->getDefaultValue($template);
+
+        $response .= ", }) </script>";
 
         $response = $twig->createTemplate($response);
         return $response->render([]);
@@ -200,22 +219,48 @@ class TemplateManagerExtension extends \Twig_Extension
         return $response;
     }
 
-    private function getDefaultValue($type)
+    private function getDefaultValue($template)
     {
-        $defaults = [
-            'text' => 'Sample Text',
-            'link' => 'http://www.optimeconsulting.com/',
-            'img' => 'https://placekitten.com/700/200',
-            'number' => 1998,
-            'date' => '2016-11-08',
-            'datetime' => '2016-11-08T00:00',
-            'time' => '14:18',
-            'email' => 'kvasquez@optimeconsulting.com',
-            'tel' => '+572572238',
-            'url' => 'http://www.optimeconsulting.com/',
-            'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
-        ];
+        $em = $this->doctrine;
 
-        return $defaults[$type];
+        $defaults = $em->getRepository(TemplateDefaults::class)
+            ->findBy(['template' => $template]);
+
+        if ($defaults) {
+            return $defaults[0]->getData();
+        } else {
+
+            $controls = $this->convertToControls($template->getBase());
+
+            dump($controls);
+            die;
+
+            foreach ($controls as $control) {
+                preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $handler, $matches);
+                $response .= $matches['name'].": '".$this->getDefaultValue($template)."', ";
+            }
+
+            $defaults = [
+                'text' => 'Sample Text',
+                'link' => 'http://www.optimeconsulting.com/',
+                'img' => 'https://placekitten.com/700/200',
+                'number' => 1998,
+                'date' => '2016-11-08',
+                'datetime' => '2016-11-08T00:00',
+                'time' => '14:18',
+                'email' => 'kvasquez@optimeconsulting.com',
+                'tel' => '+572572238',
+                'url' => 'http://www.optimeconsulting.com/',
+                'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
+            ];
+
+            return $defaults[$type];
+        }
+
+        dump($defaults[0]->getData());
+        die;
+
+
+
     }
 }

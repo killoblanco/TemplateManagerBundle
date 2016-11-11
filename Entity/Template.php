@@ -31,9 +31,16 @@ class Template
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text")
+     * @ORM\Column(name="base", type="text")
      */
-    private $content;
+    private $base;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="html", type="text")
+     */
+    private $html;
 
     /**
      * @var bool
@@ -112,26 +119,35 @@ class Template
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     * @return Template
+     * @return string
      */
-    public function setContent($content)
+    public function getBase()
     {
-        $this->content = $content;
-
-        return $this;
+        return $this->base;
     }
 
     /**
-     * Get content
-     *
+     * @param string $base
+     */
+    public function setBase($base)
+    {
+        $this->base = $base;
+    }
+
+    /**
      * @return string
      */
-    public function getContent()
+    public function getHtml()
     {
-        return $this->content;
+        return $this->html;
+    }
+
+    /**
+     * @param string $html
+     */
+    public function setHtml($html)
+    {
+        $this->html = $html;
     }
 
     /**

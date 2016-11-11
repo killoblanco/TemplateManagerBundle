@@ -4,9 +4,12 @@ services:
     public: true
     tags:
         - { name: 'twig.extension' }
+
   template_manager:
     class: killoblanco\TemplateManagerBundle\Twig\Extension\TemplateManagerExtension
     public: true
+    arguments:
+      doctrine: '@doctrine'
     tags:
       - { name: twig.extension }
 #    template_manager.example:
