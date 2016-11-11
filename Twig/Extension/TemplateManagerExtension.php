@@ -102,26 +102,14 @@ class TemplateManagerExtension extends \Twig_Extension
         $handlers = $this->convertToControls($template);
 
         foreach ($handlers as $handler) {
-            preg_match("/\'[\w]+\'\,([\S\']+|[\'])\'/", $handler, $match);
-            $_tmp = str_split($match[0],);
-            $type = $_tmp[1]
-
+            preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $handler, $matches);
+            $response .= $matches['name'].": '".$this->getDefaultValue($matches['type'])."', ";
         }
 
-
-//        $response = [];
-//        foreach ($matches[0] as $match) {
-//            array_push(
-//                $response,
-//                preg_replace(["/(?:Target)/", "/\,\s\{.+\}{2}/"], ["Control", ") }}"], $match)
-//            );
-//        }
-
-
-        dump($handlers);die;
-
         $response .= "}, }) </script>";
-        return $response;
+
+        $response = $twig->createTemplate($response);
+        return $response->render([]);
 
     }
 

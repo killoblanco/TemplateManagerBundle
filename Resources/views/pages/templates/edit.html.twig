@@ -18,21 +18,5 @@
 {% block js %}
     {{ parent() }}
     {{ generateScriptHandlers('#vueController', template.content) }}
-    <script>
-        new Vue({el: '#vueController',
-            data: {
-                text: 'Sample Text',
-                link: 'http://www.optimeconsulting.com/',
-                img: 'https://placekitten.com/700/200',
-                number: 1998,
-                date: '2016-11-08',
-                datetime: '2016-11-08T00:00',
-                time: '14:18',
-                email: 'kvasquez@optimeconsulting.com',
-                tel: '+572572238',
-                url: 'http://www.optimeconsulting.com/',
-                textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
-            },
-        })
-    </script>
 {% endblock %}
+
