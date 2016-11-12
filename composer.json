@@ -1,14 +1,8 @@
 {
   "name": "killoblanco/TemplateManagerBundle",
   "autoload": {
-    "psr-0" : {
-      "killoblanco\\TemplateManagerBundle" : "vendor"
+    "psr-0": {
+      "killoblanco\\TemplateManagerBundle": "vendor"
     }
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/killoblanco/TemplateManagerBundle"
-    }
-  ],
+  }
 }
