@@ -1,5 +1,5 @@
 {
-    "name": "killoblanco/template-manager",
+    "name": "killoblanco/template-manager-bundle",
     "description": "Symfony Template Manager Bundle",
     "license": "Mit",
     "type": "symfony-bundle",
@@ -12,6 +12,6 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": {"killoblanco\\TemplateManagerBundle\\":""}
+        "psr-4": {"killoblanco\\TemplateManagerBundle\\":""}
     }
 }
