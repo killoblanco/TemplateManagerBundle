@@ -1,5 +1,5 @@
 {
-    "name": "killoblanco/template-manager-bundle",
+    "name": "killoblanco/template-manager",
     "description": "Symfony Template Manager Bundle",
     "license": "Mit",
     "type": "library",
