@@ -10,5 +10,12 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "killoblanco/template-manager-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-4": {
+            "killoblanco\\TemplateManagerBundle": ""
+        }
+    }
 }
