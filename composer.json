@@ -1,11 +1,8 @@
 {
     "name": "killoblanco/template-manager-bundle",
     "description": "Symfony Template Manager Bundle",
-    "type": "library",
-    "require": {
-        "killoblanco/template-manager-bundle": "dev-develop"
-    },
     "license": "Mit",
+    "type": "library",
     "authors": [
         {
             "name": "Kamilo Vasquez",
@@ -15,5 +12,5 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {"killoblanco\\TemplateManagerBundle\\":""}
-    },
+    }
 }
