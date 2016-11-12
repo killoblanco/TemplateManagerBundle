@@ -1,7 +1,6 @@
 {
   "name": "killoblanco/template-manager-bundle",
-    "psr-0": {
-      "killoblanco\\TemplateManagerBundle": "vendor"
-    }
+  "psr-0": {
+    "killoblanco\\TemplateManagerBundle": "vendor"
   }
 }
