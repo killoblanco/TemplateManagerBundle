@@ -2,7 +2,8 @@
     "name": "killoblanco/template-manager",
     "description": "Symfony Template Manager Bundle",
     "license": "Mit",
-    "type": "library",
+    "type": "symfony-bundle",
+    "keywords": ["bundle", "template manager", "template", "manager"],
     "authors": [
         {
             "name": "Kamilo Vasquez",
