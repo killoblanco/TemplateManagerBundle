@@ -1,6 +1,17 @@
 {
   "name": "killoblanco/template-manager-bundle",
+  "type": "library",
+  "description": "Template Manager Bundle",
+  "keywords": ["bundle"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kamilo Vasquez",
+      "email": "me@killoblan.co"
+    }
+  ],
   "psr-0": {
-    "killoblanco\\TemplateManagerBundle": "vendor"
-  }
+    "killoblanco\\TemplateManagerBundle": ""
+  },
+  "minimum-stability": "dev"
 }
