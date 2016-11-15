@@ -232,14 +232,6 @@ class TemplateManagerExtension extends \Twig_Extension
 
             $controls = $this->convertToControls($template->getBase());
 
-            dump($controls);
-            die;
-
-            foreach ($controls as $control) {
-                preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $handler, $matches);
-                $response .= $matches['name'].": '".$this->getDefaultValue($template)."', ";
-            }
-
             $defaults = [
                 'text' => 'Sample Text',
                 'link' => 'http://www.optimeconsulting.com/',
@@ -254,11 +246,17 @@ class TemplateManagerExtension extends \Twig_Extension
                 'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
             ];
 
-            return $defaults[$type];
-        }
+            $response = '{';
 
-        dump($defaults[0]->getData());
-        die;
+            foreach ($controls as $control) {
+                preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $control, $matches);
+                $response .= $matches['name'].": '".$defaults[$matches['type']]."', ";
+            }
+
+            $response .='}';
+
+            return $response;
+        }
 
 
 
