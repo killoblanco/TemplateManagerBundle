@@ -2,7 +2,7 @@
 
 ## Instalation
 
-To install it just add the followin line into your AppKernel file
+To install it just add the followin line into your AppKernel file and run composer update
 
 ```PHP
 # app/AppKernel.php
