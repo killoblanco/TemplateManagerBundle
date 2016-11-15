@@ -6,7 +6,7 @@
             {% for template in templates %}
                 <div class="col-sm-3">
                     <div class="thumbnail">
-                        <img src="..." alt="Template Thumbnail">
+                        <img src="{{ asset(template.thumbnail) }}" alt="Template Thumbnail">
                         <div class="caption">
                             <ul class="list-unstyled">
                                 <li><b>Name:</b> {{ template.name }}</li>
