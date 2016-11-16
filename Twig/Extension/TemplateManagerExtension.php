@@ -28,26 +28,42 @@ class TemplateManagerExtension extends \Twig_Extension
             new Twig_SimpleFunction('discoverControls', [$this, 'discoverControlsFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('generateScriptHandlers', [$this, 'generateScriptHandlersFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('bindTarget', [$this, 'bindTargetFunction'], ['is_safe' => ['html']]),
-            new Twig_SimpleFunction('templateManagerConfig', [$this, 'templateManagerConfigFunction'], ['is_safe' => ['html']]),
         ];
     }
 
     public function bindControlFunction($controlType, $controlValue, $attrs = null)
     {
-        $control = $this->openControlTag($controlType);
+        if ($controlType != 'url') {
+            $control = $this->openControlTag($controlType);
 
-        $control .= ' name="'.$controlValue.'" ';
+            $control .= ' name="'.$controlValue.'" ';
 
-        if ($attrs) {
-            $control .= $this->expandAttrs($attrs);
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+
+            $control .= ' v-model="' . $controlValue . '"';
+            $control .= ' class="form-control" ';
+
+            $control .= $this->closeControlTag($controlType);
+
+            return $this->getBootstrap($control, $controlValue);
+        } else {
+            if ( $controlType == 'url') {
+                $control = '<input type="url" name="'.$controlValue.'[href]"';
+                if ($attrs) {
+                    $control.=$this->expandAttrs($attrs);
+                }
+                $control .= ' v-model="'.$controlValue.'.href" class="form-control" >';
+                $control .= '<input type="url" name="'.$controlValue.'[text]"';
+                if ($attrs) {
+                    $control.=$this->expandAttrs($attrs);
+                }
+                $control .= ' v-model="'.$controlValue.'.text" class="form-control" >';
+
+                return $this->getBootstrap($control, $controlValue);
+            }
         }
-
-        $control .= ' v-model="' . $controlValue . '"';
-        $control .= ' class="form-control" ';
-
-        $control .= $this->closeControlTag($controlType);
-
-        return $this->getBootstrap($control, $controlValue);
     }
 
     public function bindTargetFunction($controlType, $controlValue, $attrs = null)
@@ -67,9 +83,15 @@ class TemplateManagerExtension extends \Twig_Extension
                 }
                 $target .= '>{{' . $controlValue . '}}</a>';
                 return $target;
-            case 'link':
             case 'url':
-                $target = '<a v-bind:href="' . $controlValue . '" ';
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '.href" ';
+                if ($attrs) {
+                    $target .= $this->expandAttrs($attrs);
+                }
+                $target .= '>{{' . $controlValue . '.text}}</a>';
+                return $target;
+            case 'link':
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '" ';
                 if ($attrs) {
                     $target .= $this->expandAttrs($attrs);
                 }
@@ -80,6 +102,8 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= $this->expandAttrs($attrs);
                 $target .= '>';
                 return $target;
+            case 'img-link':
+                
             default:
                 $target = '<p ';
                 if ($attrs) {
@@ -88,12 +112,6 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= '>{{' . $controlValue . '}}</p>';
                 return $target;
         }
-    }
-
-    public function templateManagerConfigFunction($app)
-    {
-        $app = "<script>new Vue({el: '#" . $app . "',data: {text: 'Sample Text',link: 'http://www.optimeconsulting.com/',img: 'https://placekitten.com/700/200',number: 1998,date: '2016-11-08',datetime: '2016-11-08T00:00',time: '14:18',email: 'kvasquez@optimeconsulting.com',tel: '+572572238',url: 'http://www.optimeconsulting.com/',textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',},})</script>";
-        return $app;
     }
 
     public function discoverControlsFunction(Twig_Environment $twig, $template)
