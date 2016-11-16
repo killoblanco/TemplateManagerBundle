@@ -282,7 +282,14 @@ class TemplateManagerExtension extends \Twig_Extension
                 'time' => '14:18',
                 'email' => 'kvasquez@optimeconsulting.com',
                 'tel' => '+572572238',
-                'url' => 'http://www.optimeconsulting.com/',
+                'url' => [
+                    'href' => 'http://www.optimeconsulting.com/',
+                    'text' => 'Sample Text',
+                ],
+                'img_link' => [
+                    'href' => 'http://www.optimeconsulting.com/',
+                    'src' => 'https://placekitten.com/700/200',
+                ],
                 'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
             ];
 
@@ -290,7 +297,11 @@ class TemplateManagerExtension extends \Twig_Extension
 
             foreach ($controls as $control) {
                 preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $control, $matches);
-                $response .= $matches['name'] . ": '" . $defaults[$matches['type']] . "', ";
+                if ($matches['type'] == 'url' || $matches['type'] == 'img_link') {
+                    $response .= $matches['name'] . ": " . json_encode($defaults[$matches['type']]) . ", ";
+                } else {
+                    $response .= $matches['name'] . ": '" . $defaults[$matches['type']] . "', ";
+                }
             }
 
             $response .= '}';
