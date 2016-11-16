@@ -38,7 +38,7 @@ class Template
     /**
      * @var string
      *
-     * @ORM\Column(name="html", type="text")
+     * @ORM\Column(name="html", type="text", nullable=true)
      */
     private $html;
 
@@ -82,6 +82,7 @@ class Template
     public function __construct()
     {
         $this->created = new \DateTime();
+        $this->modified = new \DateTime();
     }
 
 

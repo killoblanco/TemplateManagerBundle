@@ -2,7 +2,9 @@
 
 namespace killoblanco\TemplateManagerBundle\Controller;
 
+use killoblanco\TemplateManagerBundle\Entity\Template;
 use killoblanco\TemplateManagerBundle\Entity\TemplateDefaults;
+use killoblanco\TemplateManagerBundle\Form\TemplatesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +55,44 @@ class TemplateController extends Controller
         ];
 
         return $this->render('@TemplateManager/pages/templates/edit.html.twig', $parameters);
+    }
+
+    /**
+     * @Route("/settings/{id}", name="tm_templates_settings", defaults={"id"= null})
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function settingsAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine();
+
+        if ( $id ) {
+            $template = $em->getRepository(Template::class)
+                ->find($id);
+        } else {
+            $template = new Template();
+        }
+
+        $form = $this->createForm(TemplatesType::class, $template);
+
+        $form->handleRequest($request);
+
+        if ( $form->isSubmitted() && $form->isValid() ) {
+            $template = $form->getData();
+
+            $em->getManager()->persist($template);
+            $em->getManager()->flush();
+
+            return $this->redirectToRoute('tm_index');
+
+        }
+
+        $parameters = [
+            'form' => $form->createView(),
+        ];
+
+        return $this->render('@TemplateManager/pages/templates/new.html.twig', $parameters);
     }
 
     /**

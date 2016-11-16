@@ -18,7 +18,17 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('@TemplateManager/pages/index.html.twig');
+        $em = $this->getDoctrine();
+
+        $templates = $em->getRepository('TemplateManagerBundle:Template')
+            ->findAll();
+
+        $parameters = [
+            'page_title' => 'List',
+            'templates' => $templates,
+        ];
+
+        return $this->render('@TemplateManager/pages/templates/list.html.twig', $parameters);
     }
 
     /**

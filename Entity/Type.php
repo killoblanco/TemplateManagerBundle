@@ -48,6 +48,15 @@ class Type
      */
     private $modified;
 
+
+    /**
+     *
+     */
+    function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * Type constructor.
      */
