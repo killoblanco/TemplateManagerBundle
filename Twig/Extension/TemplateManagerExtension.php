@@ -33,10 +33,41 @@ class TemplateManagerExtension extends \Twig_Extension
 
     public function bindControlFunction($controlType, $controlValue, $attrs = null)
     {
-        if ($controlType != 'url') {
+        if ($controlType == 'url') {
+            $control = $this->openControlTag('url');
+            $control .= ' name="' . $controlValue . '[href]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.href" class="form-control" >';
+            $control .= $this->openControlTag('text');
+            $control .= ' name="' . $controlValue . '[text]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.text" class="form-control" >';
+
+            return $this->getBootstrap($control, $controlValue);
+        } else if ($controlType == 'img_link') {
+            $control = $this->openControlTag('url');
+            $control .= ' name="' . $controlValue . '[href]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.href" class="form-control" >';
+            $control .= $this->openControlTag('img');
+            $control .= ' name="' . $controlValue . '[src]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.src" class="form-control" >';
+
+            return $this->getBootstrap($control, $controlValue);
+
+        } else {
             $control = $this->openControlTag($controlType);
 
-            $control .= ' name="'.$controlValue.'" ';
+            $control .= ' name="' . $controlValue . '" ';
 
             if ($attrs) {
                 $control .= $this->expandAttrs($attrs);
@@ -48,21 +79,6 @@ class TemplateManagerExtension extends \Twig_Extension
             $control .= $this->closeControlTag($controlType);
 
             return $this->getBootstrap($control, $controlValue);
-        } else {
-            if ( $controlType == 'url') {
-                $control = '<input type="url" name="'.$controlValue.'[href]"';
-                if ($attrs) {
-                    $control.=$this->expandAttrs($attrs);
-                }
-                $control .= ' v-model="'.$controlValue.'.href" class="form-control" >';
-                $control .= '<input type="url" name="'.$controlValue.'[text]"';
-                if ($attrs) {
-                    $control.=$this->expandAttrs($attrs);
-                }
-                $control .= ' v-model="'.$controlValue.'.text" class="form-control" >';
-
-                return $this->getBootstrap($control, $controlValue);
-            }
         }
     }
 
@@ -102,8 +118,14 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= $this->expandAttrs($attrs);
                 $target .= '>';
                 return $target;
-            case 'img-link':
-                
+            case 'img_link':
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '.href" ';
+                $target .= '><img v-bind:src="' . $controlValue . '.src" ';
+                if ($attrs) {
+                    $target .= $this->expandAttrs($attrs);
+                }
+                $target .= '></a>';
+                return $target;
             default:
                 $target = '<p ';
                 if ($attrs) {
@@ -136,7 +158,7 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         $em = $this->doctrine;
 
-        $response = "<script>new Vue({el: '".$app_name."' ,data: ";
+        $response = "<script>new Vue({el: '" . $app_name . "' ,data: ";
 
         $template = $em->getRepository('TemplateManagerBundle:Template')
             ->find($template);
@@ -268,14 +290,13 @@ class TemplateManagerExtension extends \Twig_Extension
 
             foreach ($controls as $control) {
                 preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $control, $matches);
-                $response .= $matches['name'].": '".$defaults[$matches['type']]."', ";
+                $response .= $matches['name'] . ": '" . $defaults[$matches['type']] . "', ";
             }
 
-            $response .='}';
+            $response .= '}';
 
             return $response;
         }
-
 
 
     }
