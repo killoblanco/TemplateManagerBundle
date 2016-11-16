@@ -1,88 +1,86 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
 {% block content %}
-    <div class="container" id="vueApp">
-        <div class="row">
-            <div class="col-sm-4">
+    <div class="row" id="vueApp">
+        <div class="col-sm-4">
 
-                {# type form #}
+            {# type form #}
 
-                <form action="#" method="post" id="createType" class="well well-sm">
-                    <div class="form-group">
-                        {{ form_label(types_form.name) }}
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="{{ types_form.name.vars.name }}"
-                                   id="{{ types_form.name.vars.id }}" v-model="newType.name">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-success" @click.prevent="saveType">Save</button>
+            <form action="#" method="post" id="createType" class="well well-sm">
+                <div class="form-group">
+                    {{ form_label(types_form.name) }}
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="{{ types_form.name.vars.name }}"
+                               id="{{ types_form.name.vars.id }}" v-model="newType.name">
+                        <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary" @click.prevent="saveType">Save</button>
                             </span>
-                        </div>
-                    </div>
-                    {{ form_widget(types_form.id, {'v-model': 'newType.id'}) }}
-                </form>
-
-                {# /type form #}
-                {# alert #}
-
-                <div :class="`alert alert-${ processing.status }`" v-show="processing.active">
-                    <button v-if="processing.status != 'info'" type="button" class="close" data-dismiss="alert"
-                            aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <i class="fa fa-check-circle" v-show="processing.status == 'success'"></i>
-                    <i class="fa fa-gear fa-spin" v-show="processing.status == 'info'"></i>
-                    <i class="fa fa-exclamation" v-show="processing.status == 'warning'"></i>
-                    <i class="fa fa-times" v-show="processing.status == 'danger'"></i>
-                    &nbsp;{{ '{{  processing.content }}' }}
-                </div>
-
-                {# /alert #}
-
-            </div>
-
-            {# type list#}
-
-            <div class="col-sm-6">
-                <div class="well well-sm">
-                    <table class="table table-striped table-condensed" v-if="types.length > 0">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tr v-for="type in types">
-                            <td>{{ '{{ type.id }}' }}</td>
-                            <td>{{ '{{ type.name }}' }}</td>
-                            <td @click="changeStatus(type)" style="cursor:pointer;" class="status-col">
-                                <span v-if="type.active">
-                                    Active <i class="fa fa-check-circle text-success"></i>
-                                </span>
-                                <span v-else>
-                                    Unactive <i class="fa fa-times-circle text-danger"></i>
-                                </span>
-                            </td>
-                            <td class="text-right">
-                                <button type="button" class="btn btn-xs btn-default" @click="editType(type)">
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="text-center" v-else>
-                        <p class="text-warning">
-                            <i class="fa fa-exclamation fa-4x"></i>
-                        </p>
-                        <p>You dont have any Template Type created yet</p>
                     </div>
                 </div>
+                {{ form_widget(types_form.id, {'v-model': 'newType.id'}) }}
+            </form>
+
+            {# /type form #}
+            {# alert #}
+
+            <div :class="`alert alert-${ processing.status }`" v-show="processing.active">
+                <button v-if="processing.status != 'info'" type="button" class="close" data-dismiss="alert"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <i class="fa fa-check-circle" v-show="processing.status == 'success'"></i>
+                <i class="fa fa-gear fa-spin" v-show="processing.status == 'info'"></i>
+                <i class="fa fa-exclamation" v-show="processing.status == 'warning'"></i>
+                <i class="fa fa-times" v-show="processing.status == 'danger'"></i>
+                &nbsp;{{ '{{  processing.content }}' }}
             </div>
 
-            {# /type list #}
+            {# /alert #}
 
         </div>
+
+        {# type list#}
+
+        <div class="col-sm-8">
+            <div class="well well-sm">
+                <table class="table table-striped table-condensed" v-if="types.length > 0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tr v-for="type in types">
+                        <td>{{ '{{ type.id }}' }}</td>
+                        <td>{{ '{{ type.name }}' }}</td>
+                        <td @click="changeStatus(type)" style="cursor:pointer;" class="status-col">
+                                <span v-if="type.active">
+                                    Active <i class="fa fa-check-circle text-accent"></i>
+                                </span>
+                            <span v-else>
+                                    Unactive <i class="fa fa-times-circle text-accent"></i>
+                                </span>
+                        </td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-xs btn-default" @click="editType(type)">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="text-center" v-else>
+                    <p class="text-warning">
+                        <i class="fa fa-exclamation fa-4x"></i>
+                    </p>
+                    <p>You dont have any Template Type created yet</p>
+                </div>
+            </div>
+        </div>
+
+        {# /type list #}
+
     </div>
 {% endblock %}
 

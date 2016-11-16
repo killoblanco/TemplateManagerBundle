@@ -16,16 +16,27 @@
         <div class="col-sm-12">
             <div class="page-header">
                 <h1>
-                    <a href="{{ path('tm_index') }}"><i class="fa fa-home"></i></a> Template Manager
                     {% if page_title is defined %}
-                        :&nbsp;{{ page_title }}
+                        <a href="{{ path('tm_index') }}"><i class="fa fa-home"></i></a>&nbsp;
                     {% endif %}
+                    Template Manager{% if page_title is defined %}:&nbsp;{{ page_title }}{% endif %}
                 </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <ul class="list-group">
+                    <a href="{{ path("tm_templates_list") }}" class="list-group-item">Templates List</a>
+                    <a href="{{ path("tm_type") }}" class="list-group-item">Templates Type</a>
+                    <a href="{{ path("tm_components") }}" class="list-group-item">Template Components</a>
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                {% block content %}{% endblock %}
             </div>
         </div>
     </div>
 </div>
-{% block content %}{% endblock %}
 {% block js %}
     {% include "@TemplateManager/utils/common/js.html.twig" %}
 {% endblock %}

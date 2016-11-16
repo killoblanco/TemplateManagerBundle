@@ -1,20 +1,18 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
 {% block content %}
-    <div class="container" id="vueController">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="row" id="template_html">
-                    {{ include(template_from_string(template.base)) }}
-                </div>
+    <div class="row" id="vueController">
+        <div class="col-sm-8">
+            <div class="row" id="template_html">
+                {{ include(template_from_string(template.base)) }}
             </div>
-            <div class="col-sm-4">
-                <form action="{{ path('tm_templates_save', {'id': template.id}) }}" id="controls" method="post">
-                    {{ discoverControls(template) }}
-                    <input type="hidden" name="html" id="tm_template_html">
-                    <button type="submit" class="btn btn-primary btn-block">Save Template</button>
-                </form>
-            </div>
+        </div>
+        <div class="col-sm-4">
+            <form action="{{ path('tm_templates_save', {'id': template.id}) }}" id="controls" method="post">
+                {{ discoverControls(template) }}
+                <input type="hidden" name="html" id="tm_template_html">
+                <button type="submit" class="btn btn-primary btn-block">Save Template</button>
+            </form>
         </div>
     </div>
 {% endblock %}
@@ -24,17 +22,8 @@
     {{ generateScriptHandlers('#vueController', template) }}
     <script>
         $(document)
-                .on('ready', function () {
-                    $('#tm_template_html').val($('#template_html').html());
-                })
-                .on('submit', '#controls', function (e) {
-                    $('[type="submit"]').html('<i class="fa fa-gear fa-spin"></i> Saving ...');
-                    {#console.log(JSON.stringify($(this).serializeArray()));#}
-{#//                console.log($(this).serializeArray());#}
-                    {#$.post(#}
-                    {#'{{ path('tm_templates_save', {'id': template.id}) }}',#}
-                    {#{'html': $('#template_html').html(),},#}
-                    {#function (r) { window.location.href = r });#}
-                });
+            .on('submit', '#controls', function (e) {
+                document.getElementById('tm_template_html').value = $('#template_html').html();
+            });
     </script>
 {% endblock %}
