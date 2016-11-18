@@ -1,121 +1,153 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
 {% block content %}
-    <div class="container" id="vueController">
-        <div class="row">
-            <div class="col-sm-12">
+    <div class="row" id="vueController">
+        <div class="col-sm-12">
 
-                {# Rendered as p #}
+            {# Rendered as p #}
 
-                <div class="row">
-                    <div class="page-header">
-                        <h2>Rendered as <code>&lt;p ... /&gt;</code></h2>
-                    </div>
+            <div class="row">
+                <div class="page-header">
+                    <h2>Rendered as <code>&lt;p ... /&gt;</code></h2>
                 </div>
-                <div class="row well well-sm">
-                    <div class="col-sm-4">
-                        <h4>Text:</h4>
-                        {{ bindTarget('text','text') }}
-                        {{ bindControl('text', 'text', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Number</h4>
-                        {{ bindTarget('number', 'number', {'min': '0', 'max': '99999'}) }}
-                        {{ bindControl('number', 'number', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Date</h4>
-                        {{ bindTarget('date', 'date') }}
-                        {{ bindControl('date', 'date', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Datetime</h4>
-                        {{ bindTarget('datetime', 'datetime') }}
-                        {{ bindControl('datetime', 'datetime', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Time</h4>
-                        {{ bindTarget('time', 'time') }}
-                        {{ bindControl('time', 'time', {'class':'form-control'}) }}
-                    </div>
+            </div>
+            <div class="row well well-sm">
+                <div class="col-sm-4">
+                    <h4>Text:</h4>
+                    {{ bindTarget('text','text') }}
+                    {{ bindControl('text', 'text', {'class':'form-control'}) }}
                 </div>
-
-                {# /Rendered as p #}
-                {# Rendered as a #}
-
-                <div class="row">
-                    <div class="page-header">
-                        <h2>Rendered as <code>&lt;a ... /&gt;</code></h2>
-                    </div>
+                <div class="col-sm-4">
+                    <h4>Number</h4>
+                    {{ bindTarget('number', 'number', {'min': '0', 'max': '99999'}) }}
+                    {{ bindControl('number', 'number', {'class':'form-control'}) }}
                 </div>
-                <div class="row well well-sm">
-                    <div class="col-sm-4">
-                        <h4>Link</h4>
-                        {{ bindTarget('link', 'link', {'target': '_blank'}) }}
-                        {{ bindControl('link', 'link', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Email</h4>
-                        {{ bindTarget('email', 'email') }}
-                        {{ bindControl('email', 'email', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Phone</h4>
-                        {{ bindTarget('tel', 'tel') }}
-                        {{ bindControl('tel', 'tel', {'class':'form-control'}) }}
-                    </div>
-                    <div class="col-sm-4">
-                        <h4>Url</h4>
-                        {{ bindTarget('url', 'url') }}
-                        {{ bindControl('url', 'url', {'class':'form-control'}) }}
-                    </div>
+                <div class="col-sm-4">
+                    <h4>Date</h4>
+                    {{ bindTarget('date', 'date') }}
+                    {{ bindControl('date', 'date', {'class':'form-control'}) }}
                 </div>
-
-                {# /Rendered as a #}
-
+                <div class="col-sm-4">
+                    <h4>Datetime</h4>
+                    {{ bindTarget('datetime', 'datetime') }}
+                    {{ bindControl('datetime', 'datetime', {'class':'form-control'}) }}
+                </div>
+                <div class="col-sm-4">
+                    <h4>Time</h4>
+                    {{ bindTarget('time', 'time') }}
+                    {{ bindControl('time', 'time', {'class':'form-control'}) }}
+                </div>
             </div>
 
-            {# Render an image #}
+            {# /Rendered as p #}
+            {# Rendered as a #}
 
-            <div class="col-sm-6">
+            <div class="row">
                 <div class="page-header">
-                    <h2>Rendered as <code>&lt;img ... /&gt;</code></h2>
+                    <h2>Rendered as <code>&lt;a ... /&gt;</code></h2>
                 </div>
-                <div class="well well-sm">
+            </div>
+            <div class="row well well-sm">
+                <div class="col-sm-4">
+                    <h4>Link</h4>
+                    {{ bindTarget('link', 'link', {'target': '_blank'}) }}
+                    {{ bindControl('link', 'link', {'class':'form-control'}) }}
+                </div>
+                <div class="col-sm-4">
+                    <h4>Email</h4>
+                    {{ bindTarget('email', 'email') }}
+                    {{ bindControl('email', 'email', {'class':'form-control'}) }}
+                </div>
+                <div class="col-sm-4">
+                    <h4>Phone</h4>
+                    {{ bindTarget('tel', 'tel') }}
+                    {{ bindControl('tel', 'tel', {'class':'form-control'}) }}
+                </div>
+                <div class="col-sm-4">
+                    <h4>Url</h4>
+                    {{ bindTarget('url', 'url') }}
+                    {{ bindControl('url', 'url', {'class':'form-control'}) }}
+                </div>
+            </div>
+
+            {# /Rendered as a #}
+
+        </div>
+
+        {# Render an image #}
+
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h2>Rendered as <code>&lt;img ... /&gt;</code></h2>
+            </div>
+            <div class="row well well-sm">
+                <div class="col-sm-6">
                     <h4>Image</h4>
                     {{ bindTarget('img', 'img', {'alt': 'Sample Image', 'class': 'img-responsive'}) }}
                     {{ bindControl('img', 'img', {'class':'form-control'}) }}
                     <span class="help-block">
-                        For testing edit the number range in the url. e.g. <code>https://placekitten.com/<b>#</b>/<b>#</b></code>
-                    </span>
+                                For testing edit the number range in the url. e.g. <code>https://placekitten.com/<b>#</b>/<b>#</b></code>
+                            </span>
+                </div>
+                <div class="col-sm-6">
+                    <h4>Image Link</h4>
+                    {{ bindTarget('img_link', 'img_link', {'alt': 'Sample Image', 'class': 'img-responsive'}) }}
+                    {{ bindControl('img_link', 'img_link', {'class':'form-control'}) }}
+                    <span class="help-block">
+                                For testing edit the number range in the url. e.g. <code>https://placekitten.com/<b>#</b>/<b>#</b></code>
+                            </span>
                 </div>
             </div>
-
-            {# /Render an image #}
-            {# Render an textarea #}
-
-            <div class="col-sm-6">
-                <div class="page-header">
-                    <h2>Rendered as <code>&lt;textarea ... /&gt;</code></h2>
-                </div>
-                <div class="well well-sm">
-                    <h4>Textarea</h4>
-                    {{ bindTarget('textarea', 'textarea') }}
-                    {{ bindControl('textarea', 'textarea', {
-                        'class':'form-control',
-                        'rows': 5,
-                        'style': 'max-width:100%;'
-                    }) }}
-                </div>
-            </div>
-
-            {# /Render an textarea #}
-
         </div>
+
+        {# /Render an image #}
+        {# Render an textarea #}
+
+        <div class="col-sm-6">
+            <div class="page-header">
+                <h2>Rendered as <code>&lt;textarea ... /&gt;</code></h2>
+            </div>
+            <div class="well well-sm">
+                <h4>Textarea</h4>
+                {{ bindTarget('textarea', 'textarea') }}
+                {{ bindControl('textarea', 'textarea', {
+                    'class':'form-control',
+                    'rows': 5,
+                    'style': 'max-width:100%;'
+                }) }}
+            </div>
+        </div>
+
+        {# /Render an textarea #}
+
     </div>
 {% endblock %}
 
 {% block js %}
     {{ parent() }}
-    {{ templateManagerConfig('vueController') }}
+    <script>
+        new Vue({
+            el: '#vueController',
+            data: {
+                text: 'Sample Text',
+                link: 'http://www.optimeconsulting.com/',
+                img: 'https://placekitten.com/700/200',
+                number: 1998,
+                date: '2016-11-08',
+                datetime: '2016-11-08T00:00',
+                time: '14:18',
+                email: 'kvasquez@optimeconsulting.com',
+                tel: '+572572238',
+                url: {
+                    href: 'http://www.optimeconsulting.com/',
+                    text: 'Ver Optime'
+                },
+                img_link: {
+                    href: 'http://www.optimeconsulting.com/',
+                    src: 'https://placekitten.com/700/200',
+                },
+                textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
+            },
+        })
+    </script>
 {% endblock %}

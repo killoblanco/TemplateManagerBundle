@@ -1,37 +1,29 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
+{% form_theme language_form 'bootstrap_3_layout.html.twig' %}
+
 {% block content %}
     <div class="row" id="vueApp">
         <div class="col-sm-4">
 
-            {# type form #}
+            {# Language form #}
 
-            <form action="#" method="post" id="createType" class="well well-sm">
-                <div class="form-group">
-                    {{ form_label(types_form.name) }}
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="{{ types_form.name.vars.name }}"
-                               id="{{ types_form.name.vars.id }}" v-model="newType.name">
-                        <span class="input-group-btn">
-                                <button type="submit" class="btn btn-primary" @click.prevent="saveType">Save</button>
-                            </span>
-                    </div>
-                </div>
-                {{ form_widget(types_form.id, {'v-model': 'newType.id'}) }}
+            <form action="#" method="post" id="createLanguage" class="well well-sm">
+                <h5>Language</h5>
+                {{ form_row(language_form.name, {'attr': {'v-model':'newLanguage.name'}}) }}
+                {{ form_row(language_form.value, {'attr': {'v-model':'newLanguage.value'}}) }}
+                {{ form_widget(language_form.id, {'attr': {'v-model':'newLanguage.value'}}) }}
+                <button type="submit" class="btn btn-accent btn-block" @click.prevent="saveLanguage">Save</button>
             </form>
 
             {# /type form #}
             {# alert #}
 
-            <div :class="`alert alert-${ processing.status }`" v-show="processing.active">
-                <button v-if="processing.status != 'info'" type="button" class="close" data-dismiss="alert"
-                        aria-label="Close">
+            <div :class="`alert alert-default`" v-show="processing.active">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <i class="fa fa-check-circle" v-show="processing.status == 'success'"></i>
-                <i class="fa fa-gear fa-spin" v-show="processing.status == 'info'"></i>
-                <i class="fa fa-exclamation" v-show="processing.status == 'warning'"></i>
-                <i class="fa fa-times" v-show="processing.status == 'danger'"></i>
+                <i class="fa fa-exclamation"></i>
                 &nbsp;{{ '{{  processing.content }}' }}
             </div>
 
@@ -39,24 +31,26 @@
 
         </div>
 
-        {# type list#}
+        {# language list#}
 
         <div class="col-sm-8">
             <div class="well well-sm">
-                <table class="table table-primary table-striped table-hover table-condensed" v-if="types.length > 0">
+                <table class="table table-primary table-striped table-hover table-condensed" v-if="languages.length > 0">
                     <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Value</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
                     </thead>
-                    <tr v-for="type in types">
-                        <td>{{ '{{ type.id }}' }}</td>
-                        <td>{{ '{{ type.name }}' }}</td>
-                        <td @click="changeStatus(type)" style="cursor:pointer;" class="status-col">
-                                <span v-if="type.active">
+                    <tr v-for="language in languages">
+                        <td>{{ '{{ language.id }}' }}</td>
+                        <td>{{ '{{ language.name }}' }}</td>
+                        <td>{{ '{{ language.value }}' }}</td>
+                        <td @click="changeStatus(language)" style="cursor:pointer;" class="status-col">
+                                <span v-if="language.active">
                                     Active <i class="fa fa-check-circle text-accent"></i>
                                 </span>
                             <span v-else>
@@ -64,7 +58,7 @@
                                 </span>
                         </td>
                         <td class="text-right">
-                            <button type="button" class="btn btn-xs btn-default" @click="editType(type)">
+                            <button type="button" class="btn btn-xs btn-default" @click="editLanguage(language)">
                                 <i class="fa fa-edit"></i> Edit
                             </button>
                         </td>
@@ -79,7 +73,7 @@
             </div>
         </div>
 
-        {# /type list #}
+        {# /language list #}
 
     </div>
 {% endblock %}
@@ -90,36 +84,37 @@
         var vue = new Vue({
             el: '#vueApp',
             data: {
-                newType: {
-                    name: '',
-                    id: null,
+                newLanguage: {
+                    name: null,
+                    value: null,
+                    id: null
                 },
-                types: {{ types|raw }},
+                languages: {{ languages|raw }},
                 processing: {
                     active: false,
                     status: '',
-                    content: '',
+                    content: ''
                 }
             },
             methods: {
-                saveType: function () {
+                saveLanguage: function () {
                     this.showMessage('info', 'Processing')
-                    $.post('{{ path('tm_type') }}', this.newType, function (response) {
-                        vue.types = response;
+                    $.post('{{ path('tm_language_index') }}', this.newLanguage, function (response) {
+                        vue.languages = response;
                         vue.hideMessage();
                     });
-                    this.newType = {
+                    this.newLanguage = {
                         name: '',
                         id: null,
                     };
                 },
-                editType: function (type) {
-                    this.newType = type;
+                editLanguage: function (language) {
+                    this.newLanguage = language;
                 },
-                changeStatus: function (type) {
+                changeStatus: function (language) {
                     this.showMessage('info', 'Processing')
-                    $.post('{{ path('tm_change_type_status') }}', type, function (response) {
-                        vue.types = response;
+                    $.post('{{ path('tm_change_lang_status') }}', language, function (response) {
+                        vue.languages = response;
                         vue.hideMessage();
                     });
                 },

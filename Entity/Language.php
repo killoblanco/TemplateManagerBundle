@@ -3,15 +3,14 @@
 namespace killoblanco\TemplateManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Template
+ * Language
  *
- * @ORM\Table(name="tm_template")
- * @ORM\Entity(repositoryClass="killoblanco\TemplateManagerBundle\Repository\TemplateRepository")
+ * @ORM\Table(name="tm_language")
+ * @ORM\Entity(repositoryClass="killoblanco\TemplateManagerBundle\Repository\LanguageRepository")
  */
-class Template
+class Language
 {
     /**
      * @var int
@@ -32,9 +31,9 @@ class Template
     /**
      * @var string
      *
-     * @ORM\Column(name="base", type="text")
+     * @ORM\Column(name="value", type="string", length=5)
      */
-    private $base;
+    private $value;
 
     /**
      * @var bool
@@ -42,27 +41,6 @@ class Template
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="thumbnail", type="string", length=255, nullable=true)
-     *
-     * @Assert\File(mimeTypes={"image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp"})
-     */
-    private $thumbnail;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Type", inversedBy="template")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id")
-     */
-    private $type;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Language", inversedBy="template")
-     * @ORM\JoinColumn(name="language", referencedColumnName="id")
-     */
-    private $language;
 
     /**
      * @var \DateTime
@@ -79,19 +57,17 @@ class Template
     private $modified;
 
     /**
-     * Template constructor.
+     *
      */
-    public function __construct()
+    function __toString()
     {
-        $this->created = new \DateTime();
-        $this->modified = new \DateTime();
+        return $this->getName();
     }
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -102,7 +78,7 @@ class Template
      * Set name
      *
      * @param string $name
-     * @return Template
+     * @return Language
      */
     public function setName($name)
     {
@@ -114,7 +90,7 @@ class Template
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -122,26 +98,33 @@ class Template
     }
 
     /**
-     * @return string
+     * Set value
+     *
+     * @param string $value
+     * @return Language
      */
-    public function getBase()
+    public function setValue($value)
     {
-        return $this->base;
+        $this->value = $value;
+
+        return $this;
     }
 
     /**
-     * @param string $base
+     * Get value
+     *
+     * @return string 
      */
-    public function setBase($base)
+    public function getValue()
     {
-        $this->base = $base;
+        return $this->value;
     }
 
     /**
      * Set active
      *
      * @param boolean $active
-     * @return Template
+     * @return Language
      */
     public function setActive($active)
     {
@@ -153,7 +136,7 @@ class Template
     /**
      * Get active
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getActive()
     {
@@ -161,58 +144,10 @@ class Template
     }
 
     /**
-     * @return string
-     */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-    }
-
-    /**
-     * @param string $thumbnail
-     */
-    public function setThumbnail($thumbnail)
-    {
-        $this->thumbnail = $thumbnail;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @param mixed $language
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
-    }
-
-    /**
      * Set created
      *
      * @param \DateTime $created
-     * @return Template
+     * @return Language
      */
     public function setCreated($created)
     {
@@ -224,7 +159,7 @@ class Template
     /**
      * Get created
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getCreated()
     {
@@ -235,7 +170,7 @@ class Template
      * Set modified
      *
      * @param \DateTime $modified
-     * @return Template
+     * @return Language
      */
     public function setModified($modified)
     {
@@ -247,7 +182,7 @@ class Template
     /**
      * Get modified
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
     public function getModified()
     {

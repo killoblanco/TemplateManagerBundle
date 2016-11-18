@@ -12,6 +12,3 @@ services:
       doctrine: '@doctrine'
     tags:
       - { name: twig.extension }
-#    template_manager.example:
-#        class: killoblanco\TemplateManagerBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

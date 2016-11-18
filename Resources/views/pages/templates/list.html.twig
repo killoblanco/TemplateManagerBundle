@@ -1,24 +1,51 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
+    <div class="row">
+        {% if templates %}
             {% for template in templates %}
                 <div class="col-sm-3">
                     <div class="thumbnail">
-                        <img src="..." alt="Template Thumbnail">
+                        {% if template.thumbnail %}
+                            {% set thbn = template.thumbnail %}
+                        {% else %}
+                            {% set thbn = "http://placehold.it/242x200/0097A7/FFC107.png" %}
+                        {% endif %}
+                        <img src="{{ asset(thbn) }}" alt="Template Thumbnail" height="300px">
                         <div class="caption">
                             <ul class="list-unstyled">
                                 <li><b>Name:</b> {{ template.name }}</li>
                                 <li><b>Type:</b> {{ template.type.name }}</li>
+                                <li><b>Language:</b> {{ template.language.name }}</li>
+                                <li>
+                                    <b>Status:</b>
+                                    {% if template.active %}
+                                        Active
+                                    {% else %}
+                                        Inactive
+                                    {% endif %}</li>
                             </ul>
                             <p class="text-center">
-                                <a href="{{ path("tm_templates_edit", {'id': template.id}) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{{ path("tm_templates_settings", {'id': template.id}) }}"
+                                   class="btn btn-sn btn-default">
+                                    Settings
+                                </a>
+                                {% if template.active %}
+                                    <a href="{{ path("tm_templates_edit", {'id': template.id}) }}"
+                                       class="btn btn-sm btn-primary">
+                                        Edit Defaults
+                                    </a>
+                                {% endif %}
                             </p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
-        </div>
+        {% else %}
+            <div class="col-sm-6 col-sm-offset-3 text-center">
+                <p><i class="fa fa-exclamation fa-3x text-accent"></i></p>
+                <p>No templates to display!</p>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

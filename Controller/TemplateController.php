@@ -2,9 +2,12 @@
 
 namespace killoblanco\TemplateManagerBundle\Controller;
 
+use killoblanco\TemplateManagerBundle\Entity\Template;
 use killoblanco\TemplateManagerBundle\Entity\TemplateDefaults;
+use killoblanco\TemplateManagerBundle\Form\TemplatesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -56,6 +59,65 @@ class TemplateController extends Controller
     }
 
     /**
+     * @Route("/settings/{id}", name="tm_templates_settings", defaults={"id"= null})
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function settingsAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine();
+
+        if ( $id ) {
+            $template = $em->getRepository(Template::class)
+                ->find($id);
+            if ($template->getThumbnail() !== "" && $template->getThumbnail() !== null) {
+                $template->setThumbnail(
+                    new File($template->getThumbnail())
+                );
+            }
+        } else {
+            $template = new Template();
+        }
+
+
+        $form = $this->createForm(TemplatesType::class, $template);
+
+        $form->handleRequest($request);
+
+        if ( $form->isSubmitted() && $form->isValid() ) {
+
+            $template = $form->getData();
+
+            if ($template->getThumbnail()){
+                $thumbnail = $template->getThumbnail();
+                $thumbnailName = md5(uniqid()).'.'.$thumbnail->guessExtension();
+
+                $thumbnail->move(
+                    'uploads/template_manager/thumbnails',
+                    $thumbnailName
+                );
+                $template->setThumbnail(
+                    new File('uploads/template_manager/thumbnails/'.$thumbnailName)
+                );
+            }
+
+            $em->getManager()->persist($template);
+            $em->getManager()->flush();
+
+            return $this->redirectToRoute('tm_index');
+
+        }
+
+        $parameters = [
+            'form' => $form->createView(),
+            'template' => $template
+        ];
+
+        return $this->render('@TemplateManager/pages/templates/new.html.twig', $parameters);
+    }
+
+    /**
      * @Route("/save/{id}", name="tm_templates_save")
      * @param Request $request
      * @param $id
@@ -67,8 +129,6 @@ class TemplateController extends Controller
 
         $template = $em->getRepository('TemplateManagerBundle:Template')
             ->find($id);
-
-        $template->setHtml($request->get('html'));
 
         $controls = $request->request->all();
         unset($controls['html']);
@@ -89,6 +149,6 @@ class TemplateController extends Controller
         $em->getManager()->persist($defaults);
         $em->getManager()->flush();
 
-        return $this->redirectToRoute('tm_templates_list');
+        return $this->redirectToRoute('tm_index');
     }
 }

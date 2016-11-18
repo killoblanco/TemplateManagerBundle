@@ -28,26 +28,58 @@ class TemplateManagerExtension extends \Twig_Extension
             new Twig_SimpleFunction('discoverControls', [$this, 'discoverControlsFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('generateScriptHandlers', [$this, 'generateScriptHandlersFunction'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new Twig_SimpleFunction('bindTarget', [$this, 'bindTargetFunction'], ['is_safe' => ['html']]),
-            new Twig_SimpleFunction('templateManagerConfig', [$this, 'templateManagerConfigFunction'], ['is_safe' => ['html']]),
         ];
     }
 
     public function bindControlFunction($controlType, $controlValue, $attrs = null)
     {
-        $control = $this->openControlTag($controlType);
+        if ($controlType == 'url') {
+            $control = $this->openControlTag('url');
+            $control .= ' name="' . $controlValue . '[href]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.href" class="form-control" >';
+            $control .= $this->openControlTag('text');
+            $control .= ' name="' . $controlValue . '[text]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.text" class="form-control" >';
 
-        $control .= ' name="'.$controlValue.'" ';
+            return $this->getBootstrap($control, $controlValue);
+        } else if ($controlType == 'img_link') {
+            $control = $this->openControlTag('url');
+            $control .= ' name="' . $controlValue . '[href]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.href" class="form-control" >';
+            $control .= $this->openControlTag('img');
+            $control .= ' name="' . $controlValue . '[src]"';
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+            $control .= ' v-model="' . $controlValue . '.src" class="form-control" >';
 
-        if ($attrs) {
-            $control .= $this->expandAttrs($attrs);
+            return $this->getBootstrap($control, $controlValue);
+
+        } else {
+            $control = $this->openControlTag($controlType);
+
+            $control .= ' name="' . $controlValue . '" ';
+
+            if ($attrs) {
+                $control .= $this->expandAttrs($attrs);
+            }
+
+            $control .= ' v-model="' . $controlValue . '"';
+            $control .= ' class="form-control" ';
+
+            $control .= $this->closeControlTag($controlType);
+
+            return $this->getBootstrap($control, $controlValue);
         }
-
-        $control .= ' v-model="' . $controlValue . '"';
-        $control .= ' class="form-control" ';
-
-        $control .= $this->closeControlTag($controlType);
-
-        return $this->getBootstrap($control, $controlValue);
     }
 
     public function bindTargetFunction($controlType, $controlValue, $attrs = null)
@@ -67,9 +99,15 @@ class TemplateManagerExtension extends \Twig_Extension
                 }
                 $target .= '>{{' . $controlValue . '}}</a>';
                 return $target;
-            case 'link':
             case 'url':
-                $target = '<a v-bind:href="' . $controlValue . '" ';
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '.href" ';
+                if ($attrs) {
+                    $target .= $this->expandAttrs($attrs);
+                }
+                $target .= '>{{' . $controlValue . '.text}}</a>';
+                return $target;
+            case 'link':
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '" ';
                 if ($attrs) {
                     $target .= $this->expandAttrs($attrs);
                 }
@@ -80,6 +118,14 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= $this->expandAttrs($attrs);
                 $target .= '>';
                 return $target;
+            case 'img_link':
+                $target = '<a target="_blank" v-bind:href="' . $controlValue . '.href" ';
+                $target .= '><img v-bind:src="' . $controlValue . '.src" ';
+                if ($attrs) {
+                    $target .= $this->expandAttrs($attrs);
+                }
+                $target .= '></a>';
+                return $target;
             default:
                 $target = '<p ';
                 if ($attrs) {
@@ -88,12 +134,6 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= '>{{' . $controlValue . '}}</p>';
                 return $target;
         }
-    }
-
-    public function templateManagerConfigFunction($app)
-    {
-        $app = "<script>new Vue({el: '#" . $app . "',data: {text: 'Sample Text',link: 'http://www.optimeconsulting.com/',img: 'https://placekitten.com/700/200',number: 1998,date: '2016-11-08',datetime: '2016-11-08T00:00',time: '14:18',email: 'kvasquez@optimeconsulting.com',tel: '+572572238',url: 'http://www.optimeconsulting.com/',textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',},})</script>";
-        return $app;
     }
 
     public function discoverControlsFunction(Twig_Environment $twig, $template)
@@ -118,7 +158,7 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         $em = $this->doctrine;
 
-        $response = "<script>new Vue({el: '".$app_name."' ,data: ";
+        $response = "<script>new Vue({el: '" . $app_name . "' ,data: ";
 
         $template = $em->getRepository('TemplateManagerBundle:Template')
             ->find($template);
@@ -232,14 +272,6 @@ class TemplateManagerExtension extends \Twig_Extension
 
             $controls = $this->convertToControls($template->getBase());
 
-            dump($controls);
-            die;
-
-            foreach ($controls as $control) {
-                preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $handler, $matches);
-                $response .= $matches['name'].": '".$this->getDefaultValue($template)."', ";
-            }
-
             $defaults = [
                 'text' => 'Sample Text',
                 'link' => 'http://www.optimeconsulting.com/',
@@ -250,16 +282,32 @@ class TemplateManagerExtension extends \Twig_Extension
                 'time' => '14:18',
                 'email' => 'kvasquez@optimeconsulting.com',
                 'tel' => '+572572238',
-                'url' => 'http://www.optimeconsulting.com/',
+                'url' => [
+                    'href' => 'http://www.optimeconsulting.com/',
+                    'text' => 'Sample Text',
+                ],
+                'img_link' => [
+                    'href' => 'http://www.optimeconsulting.com/',
+                    'src' => 'https://placekitten.com/700/200',
+                ],
                 'textarea' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
             ];
 
-            return $defaults[$type];
+            $response = '{';
+
+            foreach ($controls as $control) {
+                preg_match("/\'(?P<type>\w+)\'\,(\'|[[:blank:]])*\'(?P<name>\w+)\'/", $control, $matches);
+                if ($matches['type'] == 'url' || $matches['type'] == 'img_link') {
+                    $response .= $matches['name'] . ": " . json_encode($defaults[$matches['type']]) . ", ";
+                } else {
+                    $response .= $matches['name'] . ": '" . $defaults[$matches['type']] . "', ";
+                }
+            }
+
+            $response .= '}';
+
+            return $response;
         }
-
-        dump($defaults[0]->getData());
-        die;
-
 
 
     }

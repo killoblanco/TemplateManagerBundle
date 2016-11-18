@@ -1,0 +1,71 @@
+{% extends "@TemplateManager/utils/common/base.html.twig" %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//www.tinymce.com/css/codepen.min.css">
+{% endblock %}
+
+{% block content %}
+    <div class="row" id="vueController">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="col-sm-4">
+            <h4>Template</h4>
+            {{ form_row(form.name) }}
+            {{ form_row(form.type) }}
+            {{ form_row(form.language) }}
+            <div class="media">
+                <div class="media-left">
+                    {% if form.thumbnail.vars.data.pathname is defined %}
+                        <img class="media-object" src="{{ asset(form.thumbnail.vars.data.pathname) }}" alt="Thumbnail"
+                             height="64px" width="64px">
+                    {% else %}
+                        <img class="media-object" src="http://placehold.it/64/0097A7/FFC107.png?text=64x" alt="Thumbnail"
+                             height="64px" width="64px">
+                    {% endif %}
+                </div>
+                <div class="media-body">
+                    {{ form_row(form.thumbnail) }}
+                </div>
+            </div>
+            {{ form_row(form.active) }}
+            <button class="btn btn-accent btn-block" type="submit"> Save</button>
+        </div>
+        <div class="col-sm-8">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tm_base" data-toggle="tab" aria-expanded="true">Base</a></li>
+                {% if template.id %}
+                    <li><a href="{{ path('tm_templates_edit', {'id':template.id}) }}">Defaults</a></li>
+                {% endif %}
+            </ul>
+            <div id="myTabContent" class="tab-content" style="margin-top: 10px;">
+                <div class="tab-pane fade active in" id="tm_base">
+                    {{ form_widget(form.base) }}
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#tm_template_base',
+            height: 500,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+            ],
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
+        });
+//        $('[name="tm_template"]').on('submit', function(){
+//            document.getElementById('tm_template_base').value = tinyMCE.activeEditor.getContent();
+//        });
+    </script>
+{% endblock %}
