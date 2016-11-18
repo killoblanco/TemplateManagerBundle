@@ -5,11 +5,17 @@
         {% for template in templates %}
             <div class="col-sm-3">
                 <div class="thumbnail">
-                    <img src="{{ asset(template.thumbnail) }}" alt="Template Thumbnail" width="300px">
+                    {% if template.thumbnail %}
+                        {% set thbn = template.thumbnail  %}
+                    {% else %}
+                        {% set thbn = "http://placehold.it/242x200/0097A7/FFC107.png" %}
+                    {% endif %}
+                    <img src="{{ asset(thbn) }}" alt="Template Thumbnail" height="300px">
                     <div class="caption">
                         <ul class="list-unstyled">
                             <li><b>Name:</b> {{ template.name }}</li>
                             <li><b>Type:</b> {{ template.type.name }}</li>
+                            <li><b>Language:</b> {{ template.language.name }}</li>
                             <li>
                                 <b>Status:</b>
                                 {% if template.active %}
@@ -26,7 +32,7 @@
                             {% if template.active %}
                                 <a href="{{ path("tm_templates_edit", {'id': template.id}) }}"
                                    class="btn btn-sm btn-primary">
-                                    Edit
+                                    Edit Defaults
                                 </a>
                             {% endif %}
                         </p>

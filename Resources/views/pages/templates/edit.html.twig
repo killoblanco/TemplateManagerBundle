@@ -3,14 +3,22 @@
 {% block content %}
     <div class="row" id="vueController">
         <div class="col-sm-8">
-            <div class="row" id="template_html">
-                {{ include(template_from_string(template.base)) }}
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#template_html" data-toggle="tab" aria-expanded="true">Preview</a></li>
+                {% if template.id %}
+                    <li><a href="{{ path('tm_templates_settings', {'id':template.id}) }}">Settings</a></li>
+                {% endif %}
+            </ul>
+            <div id="myTabContent" class="tab-content" style="margin-top: 10px;">
+                <div class="tab-pane fade active in" id="template_html">
+                    {{ include(template_from_string(template.base)) }}
+                </div>
             </div>
         </div>
         <div class="col-sm-4">
             <form action="{{ path('tm_templates_save', {'id': template.id}) }}" id="controls" method="post">
                 {{ discoverControls(template) }}
-                <input type="hidden" name="html" id="tm_template_html">
                 <button type="submit" class="btn btn-primary btn-block">Save Template</button>
             </form>
         </div>
@@ -20,10 +28,4 @@
 {% block js %}
     {{ parent() }}
     {{ generateScriptHandlers('#vueController', template) }}
-    <script>
-        $(document)
-            .on('submit', '#controls', function (e) {
-                document.getElementById('tm_template_html').value = $('#template_html').html();
-            });
-    </script>
 {% endblock %}
