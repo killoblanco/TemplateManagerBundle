@@ -1,0 +1,138 @@
+{% extends "@TemplateManager/utils/common/base.html.twig" %}
+
+{% form_theme language_form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+    <div class="row" id="vueApp">
+        <div class="col-sm-4">
+
+            {# Language form #}
+
+            <form action="#" method="post" id="createLanguage" class="well well-sm">
+                <h5>Language</h5>
+                {{ form_row(language_form.name, {'attr': {'v-model':'newLanguage.name'}}) }}
+                {{ form_row(language_form.value, {'attr': {'v-model':'newLanguage.value'}}) }}
+                {{ form_widget(language_form.id, {'attr': {'v-model':'newLanguage.value'}}) }}
+                <button type="submit" class="btn btn-accent btn-block" @click.prevent="saveLanguage">Save</button>
+            </form>
+
+            {# /type form #}
+            {# alert #}
+
+            <div :class="`alert alert-default`" v-show="processing.active">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <i class="fa fa-exclamation"></i>
+                &nbsp;{{ '{{  processing.content }}' }}
+            </div>
+
+            {# /alert #}
+
+        </div>
+
+        {# language list#}
+
+        <div class="col-sm-8">
+            <div class="well well-sm">
+                <table class="table table-primary table-striped table-hover table-condensed" v-if="languages.length > 0">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tr v-for="language in languages">
+                        <td>{{ '{{ language.id }}' }}</td>
+                        <td>{{ '{{ language.name }}' }}</td>
+                        <td>{{ '{{ language.value }}' }}</td>
+                        <td @click="changeStatus(language)" style="cursor:pointer;" class="status-col">
+                                <span v-if="language.active">
+                                    Active <i class="fa fa-check-circle text-accent"></i>
+                                </span>
+                            <span v-else>
+                                    Unactive <i class="fa fa-times-circle text-accent"></i>
+                                </span>
+                        </td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-xs btn-default" @click="editLanguage(language)">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="text-center" v-else>
+                    <p class="text-warning">
+                        <i class="fa fa-exclamation fa-4x"></i>
+                    </p>
+                    <p>You dont have any Template Type created yet</p>
+                </div>
+            </div>
+        </div>
+
+        {# /language list #}
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script>
+        var vue = new Vue({
+            el: '#vueApp',
+            data: {
+                newLanguage: {
+                    name: null,
+                    value: null,
+                    id: null
+                },
+                languages: {{ languages|raw }},
+                processing: {
+                    active: false,
+                    status: '',
+                    content: ''
+                }
+            },
+            methods: {
+                saveLanguage: function () {
+                    this.showMessage('info', 'Processing')
+                    $.post('{{ path('tm_language_index') }}', this.newLanguage, function (response) {
+                        vue.languages = response;
+                        vue.hideMessage();
+                    });
+                    this.newLanguage = {
+                        name: '',
+                        id: null,
+                    };
+                },
+                editLanguage: function (language) {
+                    this.newLanguage = language;
+                },
+                changeStatus: function (language) {
+                    this.showMessage('info', 'Processing')
+                    $.post('{{ path('tm_change_lang_status') }}', language, function (response) {
+                        vue.languages = response;
+                        vue.hideMessage();
+                    });
+                },
+                showMessage: function (status, content) {
+                    this.processing = {
+                        active: true,
+                        status: status,
+                        content: content
+                    }
+                },
+                hideMessage: function () {
+                    this.processing = {
+                        active: false,
+                        status: '',
+                        content: ''
+                    }
+                }
+            }
+        })
+    </script>
+{% endblock %}

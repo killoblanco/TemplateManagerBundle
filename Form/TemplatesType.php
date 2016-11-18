@@ -3,7 +3,8 @@
 namespace killoblanco\TemplateManagerBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,9 +15,9 @@ class TemplatesType extends AbstractType
         $builder
             ->add('name')
             ->add('base')
-            ->add('html')
+            ->add('language')
             ->add('active')
-            ->add('thumbnail')
+            ->add('thumbnail', FileType::class, ['required' => false])
             ->add('type');
     }
 
