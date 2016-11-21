@@ -80,7 +80,6 @@ class TemplateController extends Controller
             $template = new Template();
         }
 
-
         $form = $this->createForm(TemplatesType::class, $template);
 
         $form->handleRequest($request);
