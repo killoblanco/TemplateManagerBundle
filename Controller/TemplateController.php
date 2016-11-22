@@ -73,7 +73,7 @@ class TemplateController extends Controller
                 ->find($id);
             if ($template->getThumbnail() !== "" && $template->getThumbnail() !== null) {
                 $template->setThumbnail(
-                    new File($template->getThumbnail())
+                    new File('uploads/template-manager/thumbnails/'.$template->getThumbnail())
                 );
             }
         } else {
@@ -93,11 +93,11 @@ class TemplateController extends Controller
                 $thumbnailName = md5(uniqid()).'.'.$thumbnail->guessExtension();
 
                 $thumbnail->move(
-                    'uploads/template_manager/thumbnails',
+                    $this->getParameter('thumbnails_directory'),
                     $thumbnailName
                 );
                 $template->setThumbnail(
-                    new File('uploads/template_manager/thumbnails/'.$thumbnailName)
+                    new File('uploads/template-manager/thumbnails/'.$thumbnailName)
                 );
             }
 
