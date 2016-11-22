@@ -17,8 +17,8 @@
             {{ form_row(form.language) }}
             <div class="media">
                 <div class="media-left">
-                    {% if form.thumbnail.vars.data.pathname is defined %}
-                        <img class="media-object" src="{{ asset(form.thumbnail.vars.data.pathname) }}" alt="Thumbnail"
+                    {% if form.thumbnail.vars.data.filename is defined %}
+                        <img class="media-object" src="{{ asset('uploads/template-manager/thumbnails/' ~ form.thumbnail.vars.data.filename) }}" alt="Thumbnail"
                              height="64px" width="64px">
                     {% else %}
                         <img class="media-object" src="http://placehold.it/64/0097A7/FFC107.png?text=64x" alt="Thumbnail"
