@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends '@TemplateManager/utils/common/base.html.twig' %}
 
-{% block body %}
+{% block content %}
     <h1>Type edit</h1>
 
     {{ form_start(edit_form) }}
@@ -10,7 +10,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('type_index') }}">Back to the list</a>
+            <a href="{{ path('tm_type_index') }}">Back to the list</a>
         </li>
         <li>
             {{ form_start(delete_form) }}

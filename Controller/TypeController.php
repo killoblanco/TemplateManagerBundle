@@ -5,7 +5,8 @@ namespace killoblanco\TemplateManagerBundle\Controller;
 use killoblanco\TemplateManagerBundle\Entity\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Type controller.
@@ -62,6 +63,8 @@ class TypeController extends Controller
      *
      * @Route("/{id}", name="tm_type_show")
      * @Method("GET")
+     * @param Type $type
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Type $type)
     {
@@ -78,6 +81,9 @@ class TypeController extends Controller
      *
      * @Route("/{id}/edit", name="tm_type_edit")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Type $type
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Type $type)
     {
@@ -88,10 +94,10 @@ class TypeController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('type_edit', array('id' => $type->getId()));
+            return $this->redirectToRoute('tm_type_edit', array('id' => $type->getId()));
         }
 
-        return $this->render('type/edit.html.twig', array(
+        return $this->render('@TemplateManager/pages/type/edit.html.twig', array(
             'type' => $type,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
