@@ -1,44 +1,44 @@
-{% extends '@TemplateManager/utils/common/base.html.twig' %}
+<div class="row animated fadeIn">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Type</h3>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item"><b>Id</b> {{ type.id }}</li>
+                <li class="list-group-item"><b>Name</b> {{ type.name }}</li>
+                <li class="list-group-item">
+                    <b>Active</b> {% if type.active %}Yes{% else %}No{% endif %}
+                </li>
+                <li class="list-group-item">
+                    <b>Created</b> {% if type.created %}{{ type.created|date('Y-m-d H:i:s') }}{% endif %}
+                </li>
+                <li class="list-group-item">
+                    <b>Modified</b> {% if type.modified %}{{ type.modified|date('Y-m-d H:i:s') }}{% endif %}
+                </li>
+            </ul>
+            <div class="panel-footer text-center">
+                <ul class="list-inline">
+                    <li>
+                        <div class="btn-group">
+                            <button type="button" id="close" class="btn btn-default btn-sm">
+                                <i class="fa fa-times"></i> Close
+                            </button>
+                            <a href="{{ path('tm_type_edit', { 'id': type.id }) }}" class="btn btn-default btn-sm">
+                                <i class="fa fa-pencil"></i> Edit
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        {{ form_start(delete_form) }}
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                        {{ form_end(delete_form) }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
-{% block content %}
-    <h1>Type</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ type.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ type.name }}</td>
-            </tr>
-            <tr>
-                <th>Active</th>
-                <td>{% if type.active %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Created</th>
-                <td>{% if type.created %}{{ type.created|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Modified</th>
-                <td>{% if type.modified %}{{ type.modified|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('tm_type_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('tm_type_edit', { 'id': type.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
-{% endblock %}

@@ -1,0 +1,9 @@
+var type = {};
+
+$(document)
+    .on('hover', '[data-action="show"]', function () {
+        $(this).html('<i class="fa fa-eye"></i>');
+    })
+    .on('blur', '[data-action="show"]', function () {
+        $(this).html('{{ type.id }}');
+    });

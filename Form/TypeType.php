@@ -13,7 +13,7 @@ class TypeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('active')->add('created')->add('modified')        ;
+        $builder->add('name')->add('active');
     }
     
     /**

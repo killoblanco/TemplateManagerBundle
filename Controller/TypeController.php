@@ -5,7 +5,8 @@ namespace killoblanco\TemplateManagerBundle\Controller;
 use killoblanco\TemplateManagerBundle\Entity\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Type controller.
@@ -14,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
  */
 class TypeController extends Controller
 {
+
     /**
      * Lists all type entities.
      *
@@ -26,10 +28,11 @@ class TypeController extends Controller
 
         $types = $em->getRepository('TemplateManagerBundle:Type')->findAll();
 
-        return $this->render('@TemplateManager/pages/type/index.html.twig', array(
+        return $this->render('@TemplateManager/pages/type/index.html.twig', [
             'types' => $types,
-        ));
+        ]);
     }
+
 
     /**
      * Creates a new type entity.
@@ -44,18 +47,20 @@ class TypeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $type->setModified(new \DateTime());
             $em = $this->getDoctrine()->getManager();
             $em->persist($type);
             $em->flush($type);
 
-            return $this->redirectToRoute('type_show', array('id' => $type->getId()));
+            return $this->redirectToRoute('tm_type_show', [ 'id' => $type->getId() ]);
         }
 
-        return $this->render('type/new.html.twig', array(
+        return $this->render('@TemplateManager/pages/type/new.html.twig', [
             'type' => $type,
             'form' => $form->createView(),
-        ));
+        ]);
     }
+
 
     /**
      * Finds and displays a type entity.
@@ -67,11 +72,12 @@ class TypeController extends Controller
     {
         $deleteForm = $this->createDeleteForm($type);
 
-        return $this->render('@TemplateManager/pages/type/show.html.twig', array(
-            'type' => $type,
+        return $this->render('@TemplateManager/pages/type/show.html.twig', [
+            'type'        => $type,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
+
 
     /**
      * Displays a form to edit an existing type entity.
@@ -88,15 +94,16 @@ class TypeController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('type_edit', array('id' => $type->getId()));
+            return $this->redirectToRoute('tm_type_show', [ 'id' => $type->getId() ]);
         }
 
-        return $this->render('type/edit.html.twig', array(
-            'type' => $type,
-            'edit_form' => $editForm->createView(),
+        return $this->render('@TemplateManager/pages/type/edit.html.twig', [
+            'type'        => $type,
+            'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
+
 
     /**
      * Deletes a type entity.
@@ -118,6 +125,7 @@ class TypeController extends Controller
         return $this->redirectToRoute('tm_type_index');
     }
 
+
     /**
      * Creates a form to delete a type entity.
      *
@@ -127,10 +135,7 @@ class TypeController extends Controller
      */
     private function createDeleteForm(Type $type)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('tm_type_delete', array('id' => $type->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        return $this->createFormBuilder()->setAction($this->generateUrl('tm_type_delete',
+                [ 'id' => $type->getId() ]))->setMethod('DELETE')->getForm();
     }
 }
