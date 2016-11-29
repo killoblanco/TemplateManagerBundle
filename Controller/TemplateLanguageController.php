@@ -24,7 +24,6 @@ class TemplateLanguageController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         $em = $this->getDoctrine();
         $language = new Language();
         $language_form = $this->createFormBuilder($language)
@@ -41,10 +40,12 @@ class TemplateLanguageController extends Controller
             if ($request->get('id')) {
                 $language = $em->getRepository('TemplateManagerBundle:Language')->find($request->get('id'));
                 $language->setName($request->get('name'));
+                $language->setValue($request->get('value'));
                 $language->setModified(new \DateTime());
             } else {
                 $language = new Language();
                 $language->setName($request->get('name'));
+                $language->setValue($request->get('value'));
                 $language->setModified(new \DateTime());
             }
             $em->getManager()->persist($language);

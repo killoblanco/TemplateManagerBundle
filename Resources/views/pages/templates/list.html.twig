@@ -7,7 +7,7 @@
                 <div class="col-sm-3">
                     <div class="thumbnail">
                         {% if template.thumbnail %}
-                            {% set thbn = template.thumbnail %}
+                            {% set thbn = 'uploads/template-manager/thumbnails/' ~ template.thumbnail %}
                         {% else %}
                             {% set thbn = "http://placehold.it/242x200/0097A7/FFC107.png" %}
                         {% endif %}
@@ -40,6 +40,9 @@
                         </div>
                     </div>
                 </div>
+                {% if loop.index is divisible by(4) %}
+                    <div class="clearfix"></div>
+                {% endif %}
             {% endfor %}
         {% else %}
             <div class="col-sm-6 col-sm-offset-3 text-center">

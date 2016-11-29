@@ -12,4 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class LanguageRepository extends EntityRepository
 {
+    /**
+     * @return array
+     */
+    public function findAllActives()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT l FROM TemplateManagerBundle:Language l WHERE l.active = 1'
+            )
+            ->getResult();
+
+    }
 }

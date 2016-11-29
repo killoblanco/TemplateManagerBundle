@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TemplateController extends Controller
 {
-
     /**
      * @Route("/list", name="tm_templates_list")
      * @return \Symfony\Component\HttpFoundation\Response
@@ -27,54 +26,55 @@ class TemplateController extends Controller
     {
         $em = $this->getDoctrine();
 
-        $templates = $em->getRepository('TemplateManagerBundle:Template')->findBy([ 'active' => true ]);
+        $templates = $em->getRepository('TemplateManagerBundle:Template')
+            ->findBy(['active' => true]);
 
         $parameters = [
             'page_title' => 'List',
-            'templates'  => $templates,
+            'templates' => $templates,
         ];
 
         return $this->render('@TemplateManager/pages/templates/list.html.twig', $parameters);
     }
 
-
     /**
      * @Route("/edit/{id}", name="tm_templates_edit")
      * @param Request $request
-     * @param         $id
-     *
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $id)
     {
         $em = $this->getDoctrine();
 
-        $template = $em->getRepository('TemplateManagerBundle:Template')->find($id);
+        $template = $em->getRepository('TemplateManagerBundle:Template')
+            ->find($id);
 
         $parameters = [
             'page_title' => 'Edit',
-            'template'   => $template,
+            'template' => $template,
         ];
 
         return $this->render('@TemplateManager/pages/templates/edit.html.twig', $parameters);
     }
 
-
     /**
      * @Route("/settings/{id}", name="tm_templates_settings", defaults={"id"= null})
      * @param Request $request
-     * @param         $id
-     *
+     * @param $id
      * @return Response
      */
     public function settingsAction(Request $request, $id)
     {
         $em = $this->getDoctrine();
 
-        if ($id) {
-            $template = $em->getRepository(Template::class)->find($id);
+        if ( $id ) {
+            $template = $em->getRepository(Template::class)
+                ->find($id);
             if ($template->getThumbnail() !== "" && $template->getThumbnail() !== null) {
-                $template->setThumbnail(new File($template->getThumbnail()));
+                $template->setThumbnail(
+                    new File('uploads/template-manager/thumbnails/'.$template->getThumbnail())
+                );
             }
         } else {
             $template = new Template();
@@ -84,16 +84,21 @@ class TemplateController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ( $form->isSubmitted() && $form->isValid() ) {
 
             $template = $form->getData();
 
-            if ($template->getThumbnail()) {
+            if ($template->getThumbnail()){
                 $thumbnail = $template->getThumbnail();
                 $thumbnailName = md5(uniqid()).'.'.$thumbnail->guessExtension();
 
-                $thumbnail->move('uploads/template_manager/thumbnails', $thumbnailName);
-                $template->setThumbnail(new File('uploads/template_manager/thumbnails/'.$thumbnailName));
+                $thumbnail->move(
+                    $this->getParameter('thumbnails_directory'),
+                    $thumbnailName
+                );
+                $template->setThumbnail(
+                    new File('uploads/template-manager/thumbnails/'.$thumbnailName)
+                );
             }
 
             $em->getManager()->persist($template);
@@ -104,32 +109,32 @@ class TemplateController extends Controller
         }
 
         $parameters = [
-            'form'     => $form->createView(),
+            'form' => $form->createView(),
             'template' => $template
         ];
 
         return $this->render('@TemplateManager/pages/templates/new.html.twig', $parameters);
     }
 
-
     /**
      * @Route("/save/{id}", name="tm_templates_save")
      * @param Request $request
-     * @param         $id
-     *
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function saveAction(Request $request, $id = null)
     {
         $em = $this->getDoctrine();
 
-        $template = $em->getRepository('TemplateManagerBundle:Template')->find($id);
+        $template = $em->getRepository('TemplateManagerBundle:Template')
+            ->find($id);
 
         $controls = $request->request->all();
         unset($controls['html']);
         $controls = json_encode($controls);
 
-        $defaults = $em->getRepository(TemplateDefaults::class)->findOneBy([ 'template' => $template ]);
+        $defaults = $em->getRepository(TemplateDefaults::class)
+            ->findOneBy(['template' => $template]);
 
         if ($defaults) {
             $defaults->setData($controls);
@@ -144,34 +149,5 @@ class TemplateController extends Controller
         $em->getManager()->flush();
 
         return $this->redirectToRoute('tm_index');
-    }
-
-
-    /**
-     * @param Template $template
-     *
-     * @return Response
-     */
-    public function previewTemplate(Template $template)
-    {
-        $defaults = $this->getDoctrine()->getRepository(TemplateDefaults::class)->find($template->getId());
-
-        $response = "";
-
-        if ($defaults) {
-            $defaults = json_decode($defaults);
-            $i = 0;
-            foreach ($defaults as $name => $value) {
-                $regex = "([{]{2}[\s\w('\w]+[, ']+".$name."+[')\s]+[}]{2})m";
-                if ( $i == 0 ) {
-                    $response = preg_replace($regex, $value, $template->getBase());
-                } else {
-                    $response = preg_replace($regex, $value, $response);
-                }
-            }
-        }
-        // todo: create behavior when template does not have default values
-
-        return new Response($response);
     }
 }

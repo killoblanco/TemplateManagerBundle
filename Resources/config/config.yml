@@ -1,0 +1,3 @@
+parameters:
+  thumbnails_directory: '%kernel.root_dir%/../web/uploads/template-manager/thumbnails/'
+  hotspots_directory: '%kernel.root_dir%/../web/uploads/template-manager/hotspots/'

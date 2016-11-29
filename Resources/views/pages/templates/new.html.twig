@@ -17,8 +17,8 @@
             {{ form_row(form.language) }}
             <div class="media">
                 <div class="media-left">
-                    {% if form.thumbnail.vars.data.pathname is defined %}
-                        <img class="media-object" src="{{ asset(form.thumbnail.vars.data.pathname) }}" alt="Thumbnail"
+                    {% if form.thumbnail.vars.data.filename is defined %}
+                        <img class="media-object" src="{{ asset('uploads/template-manager/thumbnails/' ~ form.thumbnail.vars.data.filename) }}" alt="Thumbnail"
                              height="64px" width="64px">
                     {% else %}
                         <img class="media-object" src="http://placehold.it/64/0097A7/FFC107.png?text=64x" alt="Thumbnail"
@@ -35,6 +35,7 @@
         <div class="col-sm-8">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tm_base" data-toggle="tab" aria-expanded="true">Base</a></li>
+                <li><a href="#tm_preview" data-toggle="tab" aria-expanded="true">Preview</a></li>
                 {% if template.id %}
                     <li><a href="{{ path('tm_templates_edit', {'id':template.id}) }}">Defaults</a></li>
                 {% endif %}
@@ -43,6 +44,7 @@
                 <div class="tab-pane fade active in" id="tm_base">
                     {{ form_widget(form.base) }}
                 </div>
+                <div class="tab-pane fade" id="tm_preview"></div>
             </div>
         </div>
         {{ form_end(form) }}
@@ -51,21 +53,10 @@
 
 {% block js %}
     {{ parent() }}
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
     <script>
-        tinymce.init({
-            selector: '#tm_template_base',
-            height: 500,
-            menubar: false,
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table contextmenu paste code'
-            ],
-            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
-        });
-//        $('[name="tm_template"]').on('submit', function(){
-//            document.getElementById('tm_template_base').value = tinyMCE.activeEditor.getContent();
-//        });
+        $('#tm_template_base')
+            .bind('input propertychange', function() {
+                $('#tm_preview').html(this.value);
+            });
     </script>
 {% endblock %}

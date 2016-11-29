@@ -1,0 +1,45 @@
+{% extends '@TemplateManager/utils/common/base.html.twig' %}
+
+{% block content %}
+    <h1>Types list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Active</th>
+                <th>Created</th>
+                <th>Modified</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for type in types %}
+            <tr>
+                <td><a href="{{ path('tm_type_show', { 'id': type.id }) }}">{{ type.id }}</a></td>
+                <td>{{ type.name }}</td>
+                <td>{% if type.active %}Yes{% else %}No{% endif %}</td>
+                <td>{% if type.created %}{{ type.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if type.modified %}{{ type.modified|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('tm_type_show', { 'id': type.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('tm_type_edit', { 'id': type.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('tm_type_new') }}">Create a new type</a>
+        </li>
+    </ul>
+{% endblock %}
