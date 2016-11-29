@@ -40,6 +40,9 @@
                         </div>
                     </div>
                 </div>
+                {% if loop.index is divisible by(4) %}
+                    <div class="clearfix"></div>
+                {% endif %}
             {% endfor %}
         {% else %}
             <div class="col-sm-6 col-sm-offset-3 text-center">
