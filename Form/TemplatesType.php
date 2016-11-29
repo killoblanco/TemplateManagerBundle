@@ -15,7 +15,11 @@ class TemplatesType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('base')
+            ->add('base', null, [
+                'attr' => [
+                    'rows' => 20,
+                ]
+            ])
             ->add('language', EntityType::class, [
                 'placeholder' => 'Choose one',
                 'class' => 'TemplateManagerBundle:Language',
