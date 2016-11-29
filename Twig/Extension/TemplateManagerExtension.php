@@ -127,12 +127,14 @@ class TemplateManagerExtension extends \Twig_Extension
                 $target .= '></a>';
                 return $target;
             default:
-                $target = '<p ';
-                if ($attrs) {
-                    $target .= $this->expandAttrs($attrs);
-                }
-                $target .= '>{{' . $controlValue . '}}</p>';
-                return $target;
+                return '{{'.$controlValue.'}}';
+                // Todo: revisar esto
+                //$target = '<p ';
+                //if ($attrs) {
+                //    $target .= $this->expandAttrs($attrs);
+                //}
+                //$target .= '>{{' . $controlValue . '}}</p>';
+                //return $target;
         }
     }
 
