@@ -13,11 +13,5 @@ services:
     tags:
       - { name: twig.extension }
 
-  template_manager.controller.template_controller:
+  template_manager.controller.template:
   	class: killoblanco\TemplateManagerBundle\Controller\TemplateController
-  	calls:
-  		- [previewTemplate, ['@?']]
-  		- [settingsAction, ['@request', '@?']]
-  		- [saveAction, ['@request', '@?']]
-  		- [editAction, ['@request', '@?']]
-  		- [setContainer, ['@service_container']]
