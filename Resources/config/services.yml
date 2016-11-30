@@ -12,3 +12,12 @@ services:
       doctrine: '@doctrine'
     tags:
       - { name: twig.extension }
+
+  template_manager.controller.template_controller:
+  	class: killoblanco\TemplateManagerBundle\Controller\TemplateController
+  	calls:
+  		- [previewTemplate, ['@?']]
+  		- [settingsAction, ['@request', '@?']]
+  		- [saveAction, ['@request', '@?']]
+  		- [editAction, ['@request', '@?']]
+  		- [setContainer, ['@service_container']]
