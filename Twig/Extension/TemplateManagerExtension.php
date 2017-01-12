@@ -156,16 +156,20 @@ class TemplateManagerExtension extends \Twig_Extension
 
     }
 
-    public function generateScriptHandlersFunction(Twig_Environment $twig, $app_name, $template)
+    public function generateScriptHandlersFunction(Twig_Environment $twig, $app_name, $template, $defaults = null)
     {
         $em = $this->doctrine;
 
         $response = "<script>new Vue({el: '" . $app_name . "' ,data: ";
 
-        $template = $em->getRepository('TemplateManagerBundle:Template')
-            ->find($template);
+        if ($defaults) {
+            $response .= $defaults;
+        } else {
+            $template = $em->getRepository('TemplateManagerBundle:Template')
+                ->find($template);
 
-        $response .= $this->getDefaultValue($template);
+            $response .= $this->getDefaultValue($template);
+        }
 
         $response .= ", }) </script>";
 
