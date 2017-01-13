@@ -103,18 +103,29 @@
         {# /Render an image #}
         {# Render an textarea #}
 
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="page-header">
                 <h2>Rendered as <code>&lt;textarea ... /&gt;</code></h2>
             </div>
-            <div class="well well-sm">
-                <h4>Textarea</h4>
-                {{ bindTarget('textarea', 'textarea') }}
-                {{ bindControl('textarea', 'textarea', {
-                    'class':'form-control',
-                    'rows': 5,
-                    'style': 'max-width:100%;'
-                }) }}
+            <div class="row well well-sm">
+                <div class="col-sm-6">
+                    <h4>Textarea</h4>
+                    {{ bindTarget('textarea', 'textarea') }}
+                    {{ bindControl('textarea', 'textarea', {
+                        'class':'form-control',
+                        'rows': 5,
+                        'style': 'max-width:100%;'
+                    }) }}
+                </div>
+                <div class="col-sm-6">
+                    <h4>TinyMCE</h4>
+                    {{ bindTarget('tinymce', 'tinymce') }}
+                    {{ bindControl('tinymce', 'tinymce', {
+                        'class': 'form-control tinymce',
+                        'rows': 5,
+                        'style': 'max-width:100%'
+                    }) }}
+                </div>
             </div>
         </div>
 
@@ -126,7 +137,7 @@
 {% block js %}
     {{ parent() }}
     <script>
-        new Vue({
+        var vueController = new Vue({
             el: '#vueController',
             data: {
                 text: 'Sample Text',
@@ -147,7 +158,9 @@
                     src: 'https://placekitten.com/700/200',
                 },
                 textarea: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, similique vel vitae!',
+                tinymce: 'Lorem ipsum dolor sit amet, <i>consectetur adipisicing elit</i>. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, <b>similique vel vitae!</b>',
             },
         })
     </script>
+    {{ generateSimpleTinymce('vueController', 'tinymce') }}
 {% endblock %}
