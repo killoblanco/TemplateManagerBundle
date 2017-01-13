@@ -199,38 +199,20 @@ class TemplateManagerExtension extends \Twig_Extension
          * script. ass well must be defined on the code that only is
          * required if a tinymce control type is declarated.
          */
-        $response = '<script src="http://cdn.tinymce.com/4/tinymce.min.js"></script>';
-        if (is_array($tinymce)) {
-            foreach ($tinymce as $e) {
-                $response .= "<script>
-                    tinymce.init({
-                        selector: '.".$e."',
-                        statusbar: false,
-                        menubar: false,
-                        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
-                        setup: function (editor) {
-                            editor.on('keyup change', function () {
-                                ".$app_name.".".$e." = editor.getContent();
-                            });
-                        }
+
+        $response .= "<script>
+            tinymce.init({
+                selector: '.tinymce',
+                statusbar: false,
+                menubar: false,
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
+                setup: function (editor) {
+                    editor.on('keyup change', function () {
+                        ".$app_name.".".$tinymce." = editor.getContent();
                     });
-                </script>";
-            }
-        } else {
-            $response .= "<script>
-                tinymce.init({
-                    selector: '.tinymce',
-                    statusbar: false,
-                    menubar: false,
-                    toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
-                    setup: function (editor) {
-                        editor.on('keyup change', function () {
-                            ".$app_name.".".$tinymce." = editor.getContent();
-                        });
-                    }
-                });
-            </script>";
-        }
+                }
+            });
+        </script>";
 
         $response = $twig->createTemplate($response);
 
