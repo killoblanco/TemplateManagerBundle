@@ -121,7 +121,7 @@
                     <h4>TinyMCE</h4>
                     {{ bindTarget('tinymce', 'tinymce') }}
                     {{ bindControl('tinymce', 'tinymce', {
-                        'class': 'form-control tinymce',
+                        'class': 'form-control',
                         'rows': 5,
                         'style': 'max-width:100%'
                     }) }}
@@ -162,5 +162,4 @@
             },
         })
     </script>
-    {{ generateSimpleTinymce('vueController', 'tinymce') }}
 {% endblock %}

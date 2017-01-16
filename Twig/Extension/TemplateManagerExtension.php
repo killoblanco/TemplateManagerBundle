@@ -78,8 +78,18 @@ class TemplateManagerExtension extends \Twig_Extension
 
                 $control .= ' name="'.$controlValue.'" ';
 
+
                 if ($attrs) {
+                    if ($controlType == 'tinymce') {
+                        $attrs['class'] .= " ".$controlValue;
+                    }
                     $control .= $this->expandAttrs($attrs);
+                } else {
+                    $attrs = [];
+                    if ($controlType == 'tinymce') {
+                        $attrs['class'] = " ".$controlValue;
+                        $control .= $this->expandAttrs($attrs);
+                    }
                 }
 
                 $control .= ' v-model="'.$controlValue.'"';
@@ -159,8 +169,21 @@ class TemplateManagerExtension extends \Twig_Extension
 
         $controls = $this->convertToControls($template->getBase());
 
+
         $response = '<div class="page-heaer"><h4>Template Controllers</h4></div>';
-        $response .= implode('', $controls);
+
+        foreach ($controls as $control) {
+            $response .= $control;
+            preg_match(
+                "/[{]{2}[\w\s]+([(,\s')]+)(?'controlType'[\w]+)(?1)(?'controlValue'[\w]+)(?1)[}]{2}/",
+                $control, $matches
+            );
+            if ($matches['controlType'] == 'tinymce') {
+                $response .= $this->generateSimpleTinymce($matches['controlValue']);
+            }
+
+        }
+        //dump($response);die;
 
         $response = $twig->createTemplate($response);
 
@@ -173,7 +196,7 @@ class TemplateManagerExtension extends \Twig_Extension
     {
         $em = $this->doctrine;
 
-        $response = "<script>var ".$app_name." = new Vue({el: '".$app_name."' ,data: ";
+        $response = "<script>var ".$app_name." = new Vue({el: '#".$app_name."' ,data: ";
 
         if ($defaults) {
             $response .= $defaults;
@@ -193,19 +216,19 @@ class TemplateManagerExtension extends \Twig_Extension
 
     }
 
-    public function generateSimpleTinymce(Twig_Environment $twig, $app_name, $tinymce) {
+    public function generateSimpleTinymce($tinymce, $app_name = "vueController") {
         /**
          * This function must generate simple tinymce implementation
          * script. ass well must be defined on the code that only is
          * required if a tinymce control type is declarated.
          */
 
-        $response .= "<script>
+        $response = "<script>
             tinymce.init({
-                selector: '.tinymce',
+                selector: '.".$tinymce."',
                 statusbar: false,
                 menubar: false,
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
+                toolbar: 'undo redo | outdent indent | bold italic | alignleft aligncenter alignright alignjustify',
                 setup: function (editor) {
                     editor.on('keyup change', function () {
                         ".$app_name.".".$tinymce." = editor.getContent();
@@ -214,9 +237,10 @@ class TemplateManagerExtension extends \Twig_Extension
             });
         </script>";
 
-        $response = $twig->createTemplate($response);
+        //$response = $twig->createTemplate($response);
 
-        return $response->render([]);
+        //return $response->render([]);
+        return $response;
     }
 
     /**
