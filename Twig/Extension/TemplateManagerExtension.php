@@ -228,7 +228,7 @@ class TemplateManagerExtension extends \Twig_Extension
                 selector: '.".$tinymce."',
                 statusbar: false,
                 menubar: false,
-                toolbar: 'undo redo | outdent indent | bold italic | alignleft aligncenter alignright alignjustify',
+                toolbar: 'redo | bold italic | alignleft aligncenter alignright alignjustify',
                 setup: function (editor) {
                     editor.on('keyup change', function () {
                         ".$app_name.".".$tinymce." = editor.getContent();

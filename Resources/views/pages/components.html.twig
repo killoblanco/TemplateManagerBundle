@@ -1,5 +1,22 @@
 {% extends "@TemplateManager/utils/common/base.html.twig" %}
 
+{% block css %}
+    {{ parent() }}
+    <style type="text/css">
+        form#controls > .page-header > h4 {
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+            padding-bottom: 1em;
+            border-bottom: 1px solid #cacdd0;
+            margin-bottom: 1em;
+        }
+        .mce-btn button {
+            padding: 0.4rem !important;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="row" id="vueController">
         <div class="col-sm-12">
@@ -161,5 +178,18 @@
                 tinymce: 'Lorem ipsum dolor sit amet, <i>consectetur adipisicing elit</i>. At consequuntur eaque facere nulla provident, quidem temporibus. Ad dicta dignissimos dolorum est fugiat ipsum, non possimus, <b>similique vel vitae!</b>',
             },
         })
+    </script>
+    <script>
+        tinymce.init({
+            selector: '.tinymce',
+            statusbar: false,
+            menubar: 'formats',
+            toolbar: 'redo | bold italic | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect',
+            setup: function (editor) {
+                editor.on('keyup change', function () {
+                    vueController.tinymce = editor.getContent();
+                });
+            }
+        });
     </script>
 {% endblock %}
