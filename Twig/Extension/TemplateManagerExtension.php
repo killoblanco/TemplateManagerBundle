@@ -228,7 +228,7 @@ class TemplateManagerExtension extends \Twig_Extension
                 selector: '.".$tinymce."',
                 statusbar: false,
                 menubar: false,
-                toolbar: 'bold italic alignleft aligncenter alignright alignjustify fontselect fontsizeselect',
+                toolbar: 'bold italic | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect',
                 height : '200',
                 setup: function (editor) {
                     editor.on('keyup change', function () {
