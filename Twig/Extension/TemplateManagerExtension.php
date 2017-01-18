@@ -229,6 +229,7 @@ class TemplateManagerExtension extends \Twig_Extension
                 statusbar: false,
                 menubar: false,
                 toolbar: 'redo | bold italic | alignleft aligncenter alignright alignjustify | fontselect fontsizeselect',
+                height : '300'
                 setup: function (editor) {
                     editor.on('keyup change', function () {
                         ".$app_name.".".$tinymce." = editor.getContent();
